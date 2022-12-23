@@ -1,0 +1,135 @@
+#+TITLE: Emacs配置文件
+#+AUTHOR: Randolph
+#+DATE: 2022/12/22 14:23:50
+
+#+STARTUP: overview
+
+* early-init.el
+:PROPERTIES:
+:HEADER-ARGS: :tangle early-init.el
+:END:
+
+在Emacs刚启动，还未加载主要配置文件时的配置文件。
+
+#+BEGIN_SRC emacs-lisp
+;;; early-init.el --- Emacs pre-initialization config -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;; Code:
+
+;; 设置垃圾回收参数
+(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-percentage 0.6)
+
+;; 启动早期不加载`package.el'包管理器
+(setq package-enable-at-startup nil)
+;; 不从包缓存中加载
+(setq package-quickstart nil)
+
+;; 禁止展示菜单栏、工具栏和纵向滚动条
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;; 禁止自动缩放窗口先
+(setq frame-inhibit-implied-resize t)
+
+;; 禁止菜单栏、工具栏、滚动条模式，禁止启动屏幕和文件对话框
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(setq inhibit-splash-screen t)
+(setq use-file-dialog nil)
+
+;; 在这个阶段不编译
+(setq comp-deferred-compilation nil)
+
+(provide 'early-init)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; early-init.el ends here
+#+END_SRC
+
+* init.el
+:PROPERTIES:
+:HEADER-ARGS: :tangle init.el
+:END:
+
+=init.el= 是Emacs的主要配置文件。
+
+** init.el 文件头
+#+BEGIN_SRC emacs-lisp
+;;; init.el --- The main init entry for Emacs -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;; Code:
+
+#+END_SRC
+
+** package包管理配置
+#+begin_src emacs-lisp
+(require 'package)
+(setq package-archives
+	  '(("melpa"  . "https://melpa.org/packages/")
+	    ("gnu"    . "https://elpa.gnu.org/packages/")
+	    ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+(package-initialize)
+#+end_src
+
+** 安装use-package插件
+[[https://github.com/jwiegley/use-package][use-package]] 是一个让Emacs配置更加结构化更加清晰的一个宏插件。
+
+#+begin_src emacs-lisp
+;; 安装 `use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; 配置 `use-package'
+(eval-and-compile
+  (setq use-package-always-ensure nil)
+  (setq use-package-always-defer nil)
+  (setq use-package-expand-minimally nil)
+  (setq use-package-enable-imenu-support t)
+  (if (daemonp)
+	  (setq use-package-always-demand t)))
+
+(eval-when-compile
+  (require 'use-package))
+
+;; 安装 `use-package' 的集成模块
+(use-package use-package-ensure-system-package
+  :ensure t)
+(use-package diminish
+  :ensure t)
+(use-package bind-key
+  :ensure t)
+#+end_src
+
+** quelpa包管理器
+[[https://github.com/quelpa/quelpa][quelpa]] 是配合 =package.el= 使用的，基于git的一个包管理器。
+#+BEGIN_SRC emacs-lisp
+;; 安装 `quelpa'
+(use-package quelpa
+  :ensure t
+  :commands quelpa
+  :config
+  :custom
+  (quelpa-git-clone-depth 1)
+  (quelpa-update-melpa-p nil)
+  (quelpa-self-upgrade-p nil)
+  (quelpa-checkout-melpa-p nil))
+
+;; `quelpa' 与 `use-package' 集成
+(use-package quelpa-use-package
+  :ensure t)
+#+END_SRC
+
+** init.el 文件尾
+#+BEGIN_SRC emacs-lisp
+
+(provide 'init)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init.el ends here
+#+END_SRC
+
