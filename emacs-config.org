@@ -1,4 +1,5 @@
 #+TITLE: Emacs配置文件
+#+SUBTITLE: 面向产品经理的Emacs教程
 #+AUTHOR: Randolph
 #+DATE: 2022/12/22 14:23:50
 
@@ -136,6 +137,8 @@
 ;; 不要在`*message*'缓冲区显示加载模块化配置的信息
 (with-temp-message ""
   (require 'init-ui)                    ; UI交互
+  (require 'init-edit)                  ; 编辑行为
+  (require 'init-org)                   ; org相关设置
   )
 #+END_SRC
 
@@ -163,7 +166,7 @@
 
 ** ef主题
 
-[[https://protesilaos.com/emacs/ef-themes#h:ac76ded0-af9b-4566-aff9-75142ef2d4ef][ef themes]] 是我非常喜欢的一个主题包。
+[[https://protesilaos.com/emacs/ef-themes][ef themes]] 是我非常喜欢的一个主题包。
 
 #+BEGIN_SRC emacs-lisp
 (use-package ef-themes
@@ -187,7 +190,11 @@
   ;; Load the theme of choice:
   ;; The themes we provide are recorded in the `ef-themes-dark-themes',
   ;; `ef-themes-light-themes'.
+  
+  ;; 如果你不喜欢随机主题，也可以直接固定选择一个主题，如下：
   ;; (ef-themes-select 'ef-summer)
+
+  ;; 随机挑选一款主题，如果是命令行打开Emacs，则随机挑选一款黑色主题
   (if (display-graphic-p)
       (ef-themes-load-random)
     (ef-themes-load-random 'dark))
@@ -547,4 +554,119 @@
 (provide 'init-ui)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-ui.el ends here
+#+END_SRC
+
+* init-edit.el
+:PROPERTIES:
+:HEADER-ARGS: :tangle lisp/init-edit.el :mkdirp yes
+:END:
+
+** init-edit.el 文件头
+
+#+BEGIN_SRC emacs-lisp
+;;; init-edit.el --- Editing settings -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;; Code:
+
+#+END_SRC
+
+** Emacs备份设置
+
+不使用Emacs的自动备份设置。
+
+#+BEGIN_SRC emacs-lisp
+(setq make-backup-files nil)                                  ; 不自动备份
+(setq auto-save-default nil)                                  ; 不使用Emacs自带的自动保存
+#+END_SRC
+
+** 解除一些不常用的快捷键
+
+将一些不常用的快捷键解除，防止误操作。
+
+#+BEGIN_SRC emacs-lisp
+;; 解除不常用的快捷键定义
+(global-set-key (kbd "C-z") nil)
+(global-set-key (kbd "s-q") nil)
+(global-set-key (kbd "M-z") nil)
+(global-set-key (kbd "M-m") nil)
+(global-set-key (kbd "C-x C-z") nil)
+(global-set-key [mouse-2] nil)
+#+END_SRC
+
+** delsel选择文本输入时直接替换
+
+Emacs默认选择文本后直接输入，是不会直接删除所选择的文本进行替换的。通过内置的 =delsel= 插件来实现这个行为。
+
+#+begin_src emacs-lisp
+;; Directly modify when selecting text
+(use-package delsel
+  :ensure nil
+  :hook (after-init . delete-selection-mode))
+#+end_src
+
+** 自动重载设置
+
+当我们的文件发生了改变后，我们希望Emacs里打开的永远是最新的文件，这个时候，我们需要对自动重载进行设置，让我们的Emacs在文件发生改变的时候自动重载文件。
+
+#+BEGIN_SRC emacs-lisp
+(use-package autorevert
+  :ensure nil
+  :hook (after-init . global-auto-revert-mode)
+  :bind ("s-u" . revert-buffer)
+  :custom
+  (auto-revert-interval 10)
+  (auto-revert-avoid-polling t)
+  (auto-revert-verbose nil)
+  (auto-revert-remote-files t)
+  (auto-revert-check-vc-info t)
+  (global-auto-revert-non-file-buffers t))
+#+END_SRC
+
+** init-edit.el 文件尾
+
+#+BEGIN_SRC emacs-lisp
+;; (message "init-base configuration: %.2fs"
+;;          (float-time (time-subtract (current-time) my/init-base-start-time)))
+
+(provide 'init-edit)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init-edit.el ends here
+#+END_SRC
+
+* init-org.el
+:PROPERTIES:
+:HEADER-ARGS: :tangle lisp/init-org.el :mkdirp yes
+:END:
+
+** init-org.el 文件头
+
+#+BEGIN_SRC emacs-lisp
+;;; init-org.el --- Org mode settings -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;; Code:
+
+#+END_SRC
+
+** org-auto-tangle自动tangle设置
+
+[[https://github.com/yilkalargaw/org-auto-tangle][org-auto-tangle]] 插件可以在Org mode下自动进行tangle。
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-auto-tangle
+  :ensure t
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t)
+  )
+#+END_SRC
+
+** init-org.el 文件尾
+
+#+BEGIN_SRC emacs-lisp
+
+(provide 'init-org)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init-org.el ends here
 #+END_SRC
