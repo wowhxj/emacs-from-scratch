@@ -140,6 +140,7 @@
     (require 'init-edit)                  ; 编辑行为
     (require 'init-org)                   ; org相关设置
     (require 'init-completion)            ; 补全系统
+    (require 'init-tools)                 ; 相关工具
     )
 #+END_SRC
 
@@ -1308,12 +1309,12 @@ For locate on MacOS:
 ;;; init-completion.el ends here
 #+END_SRC
 
-* init-tool.el
+* init-tools.el
 :PROPERTIES:
 :HEADER-ARGS: :tangle lisp/init-tools.el :mkdirp yes
 :END:
 
-** init-tool.el 文件头
+** init-tools.el 文件头
 
 #+BEGIN_SRC emacs-lisp
 ;;; init-tools.el --- Tools settings -*- lexical-binding: t -*-
@@ -1364,7 +1365,7 @@ For locate on MacOS:
   (which-key-add-column-padding 1))
 #+end_src
 
-** init-tool.el 文件尾
+** init-tools.el 文件尾
 
 #+BEGIN_SRC emacs-lisp
 
