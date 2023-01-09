@@ -141,6 +141,7 @@
     (require 'init-org)                   ; org相关设置
     (require 'init-completion)            ; 补全系统
     (require 'init-tools)                 ; 相关工具
+    (require 'init-base)                  ; 一些基本配置
     )
 #+END_SRC
 
@@ -556,6 +557,171 @@
 (provide 'init-ui)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-ui.el ends here
+#+END_SRC
+
+* init-base.el
+:PROPERTIES:
+:HEADER-ARGS: :tangle lisp/init-base.el :mkdirp yes
+:END:
+
+** init-base.el 文件头
+#+BEGIN_SRC emacs-lisp
+;;; init-base.el --- Basical settings -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;; Code:
+
+#+END_SRC
+
+** no-littering让配置目录简洁
+[[https://github.com/emacscollective/no-littering][no-littering]] 插件将原本放在 =.emacs.d= 目录下的一些配置信息或动态信息，转移到 =etc= 或 =var= 子目录里，让配置目录更加简洁清爽。
+
+#+begin_src emacs-lisp
+(use-package no-littering
+  :ensure t)
+#+end_src
+
+** savehist记住迷你缓冲区历史
+记住迷你缓冲区历史。
+
+#+BEGIN_SRC emacs-lisp
+(use-package savehist
+  :ensure nil
+  :hook (after-init . savehist-mode)
+  :config
+  ;; Allow commands in minibuffers, will affect `dired-do-dired-do-find-regexp-and-replace' command:
+  (setq enable-recursive-minibuffers t)
+  (setq history-length 1000)
+  (setq savehist-additional-variables '(mark-ring
+                                        global-mark-ring
+                                        search-ring
+                                        regexp-search-ring
+                                        extended-command-history))
+  (setq savehist-autosave-interval 300))
+#+END_SRC
+
+** saveplace记住每个文件的光标位置
+自动记住每个文件的最后一次访问的光标位置。
+
+#+begin_src emacs-lisp
+(use-package saveplace
+  :ensure nil
+  :hook (after-init . save-place-mode))
+#+end_src
+
+** recentf最近打开的文件历史
+记住最近打开的文件历史。
+
+#+begin_src emacs-lisp
+(use-package recentf
+  :ensure nil
+  :defines no-littering-etc-directory no-littering-var-directory
+  :hook (after-init . recentf-mode)
+  :custom
+  (recentf-max-saved-items 300)
+  (recentf-auto-cleanup 'never)
+  ;; `recentf-add-file' will apply handlers first, then call `string-prefix-p'
+  ;; to check if it can be pushed to recentf list.
+  (recentf-filename-handlers '(abbreviate-file-name))
+  (recentf-exclude `(,@(cl-loop for f in `(,package-user-dir
+                                           ,no-littering-var-directory
+                                           ,no-littering-etc-directory)
+                                collect (abbreviate-file-name f))
+                     ;; Folders on MacOS start
+                     "^/private/tmp/"
+                     "^/var/folders/"
+                     ;; Folders on MacOS end
+                     ".cache"
+                     ".cask"
+                     ".elfeed"
+                     "elfeed"
+                     "bookmarks"
+                     "cache"
+                     "ido.*"
+                     "persp-confs"
+                     "recentf"
+                     "undo-tree-hist"
+                     "url"
+                     "^/tmp/"
+                     "/ssh\\(x\\)?:"
+                     "/su\\(do\\)?:"
+                     "^/usr/include/"
+                     "/TAGS\\'"
+                     "COMMIT_EDITMSG\\'")))
+#+end_src
+
+** undo-tree撤销设置
+
+[[https://www.dr-qubit.org/undo-tree.html][undo-tree]] 插件可以提供一个可视化的撤销、重做系统，我们使用 =C-/= 来撤销，使用 =M-_= 来重做。
+
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :hook (after-init . global-undo-tree-mode)
+  :config
+  ;; don't save undo history to local files
+  (setq undo-tree-auto-save-history nil)
+  )
+#+end_src
+
+** super-save自动保存
+
+[[https://github.com/bbatsov/super-save][super-save]] 插件能自动保存缓冲区。它可以设置在某些行为（如窗口切换、或窗口空闲一段时间）下自动保存。
+
+#+BEGIN_SRC emacs-lisp
+(use-package super-save
+  :ensure t
+  :hook (after-init . super-save-mode)
+  :config
+  ;; Emacs空闲是否自动保存，这里不设置
+  (setq super-save-auto-save-when-idle nil)
+  ;; 切换窗口自动保存
+  (add-to-list 'super-save-triggers 'other-window)
+  ;; 查找文件时自动保存
+  (add-to-list 'super-save-hook-triggers 'find-file-hook)
+  ;; 远程文件编辑不自动保存
+  (setq super-save-remote-files nil)
+  ;; 特定后缀名的文件不自动保存
+  (setq super-save-exclude '(".gpg"))
+  ;; 自动保存时，保存所有缓冲区
+  (defun super-save/save-all-buffers ()
+    (save-excursion
+      (dolist (buf (buffer-list))
+        (set-buffer buf)
+        (when (and buffer-file-name
+                   (buffer-modified-p (current-buffer))
+                   (file-writable-p buffer-file-name)
+                   (if (file-remote-p buffer-file-name) super-save-remote-files t))
+          (save-buffer)))))
+  (advice-add 'super-save-command :override 'super-save/save-all-buffers)
+  )
+#+END_SRC
+
+** crux系统增强
+[[https://github.com/bbatsov/crux][crux]] 插件提供一系列的增强，如移动增强、删除增强等优化功能。
+
+#+begin_src emacs-lisp
+(use-package crux
+  :ensure t
+  :bind (("C-a" . crux-move-beginning-of-line)
+         ("C-x 4 t" . crux-transpose-windows)
+         ("C-x K" . crux-kill-other-buffers)
+         ("C-k" . crux-smart-kill-line)
+         ("C-c r" . crux-rename-file-and-buffer)
+         ("C-x DEL" . crux-kill-line-backwards))
+  :config
+  (crux-with-region-or-buffer indent-region)
+  (crux-with-region-or-buffer untabify)
+  (crux-with-region-or-point-to-eol kill-ring-save)
+  (defalias 'rename-file-and-buffer #'crux-rename-file-and-buffer))
+#+end_src
+
+** init-base.el 文件尾
+#+BEGIN_SRC emacs-lisp
+
+(provide 'init-base)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init-base.el ends here
 #+END_SRC
 
 * init-edit.el
