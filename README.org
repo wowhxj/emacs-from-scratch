@@ -1458,6 +1458,24 @@ Marked 2 is a mac app that renders markdown."
   )
 #+END_SRC
 
+** org-super-links反链设置
+
+[[https://github.com/toshism/org-super-links][org-super-links]] 插件可以设置反向链接。
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-super-links
+  :quelpa (org-super-links :fetcher github :repo "toshism/org-super-links")
+  :bind (("C-c s s"   . org-super-links-link)
+         ("C-c s l"   . org-super-links-store-link)
+         ("C-c s C-l" . org-super-links-insert-link)
+         ("C-c s d"   . org-super-links-quick-insert-drawer-link)
+         ("C-c s i"   . org-super-links-quick-insert-inline-link)
+         ("C-c s C-d" . org-super-links-delete-link))
+  :config
+  (setq org-super-links-related-into-drawer t)
+  (setq	org-super-links-link-prefix 'org-super-links-link-prefix-timestamp))
+#+END_SRC
+
 ** init-org.el 文件尾
 
 #+BEGIN_SRC emacs-lisp
