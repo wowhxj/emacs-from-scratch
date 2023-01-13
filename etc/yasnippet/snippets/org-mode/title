@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: title
+# key: <ti
+# --
+#+TITLE: $0
+#+SUBTITLE:
+#+AUTHOR: Randolph HUANG
+#+DATE: `(format-time-string "%Y/%m/%d %H:%M:%S")`
+#+EMAIL: xiaojianghuang@gmail.com
+
+#+STARTUP: overview
+#+SETUPFILE: `(locate-user-emacs-file "org-setupfile.org")`
+#+OPTIONS: author:nil date:nil email:nil timestamp:nil num:t

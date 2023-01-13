@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: revealsplit
+# key: <rs
+# --
+#+REVEAL: split:t
+$0

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: reveal-fragment
+# key: <rf
+# --
+#+ATTR_REVEAL: :frag (appear)$0

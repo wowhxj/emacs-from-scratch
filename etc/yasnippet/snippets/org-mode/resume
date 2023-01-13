@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: resume
+# key: <cv
+# --
+#+TITLE: 黄孝江简历
+#+OPTIONS: toc:nil H:10 tex:t author:nil date:nil
+#+STARTUP: hidestars indent
+#+LaTex_CLASS: cv
+
+$0

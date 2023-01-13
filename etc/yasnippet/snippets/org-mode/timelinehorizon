@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: timeline-horizon
+# key: <th
+# --
+#+TITLE: $0
+#+DESCRIPTION: Org-mode export for HTML timeline in horizontal mode
+#+OPTIONS: num:nil
+#+TIMELINE_HEADER: <h2></h2>
+#+TIMELINE_HEADER: <p></p>
+#+TIMELINE_FOOTER: <h2></h2>
+#+TIMELINE_FOOTER: <p></p>
+#+HTML_HEAD: <link href="css/style.min.css" rel="stylesheet">
+#+TIMELINE_MODE:  horizontal
+#+TIMELINE_FORCE_VERTICAL_MODE: 800
+#+TIMELINE_VISIBLE_ITEMS: 5

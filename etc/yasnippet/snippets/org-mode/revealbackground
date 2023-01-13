@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: reveal-background
+# key: <rb
+# --
+:PROPERTIES:
+:reveal_background: `(concat "./" (buffer-name) ".assets/")`$0
+:reveal_background_trans: slide
+:END:

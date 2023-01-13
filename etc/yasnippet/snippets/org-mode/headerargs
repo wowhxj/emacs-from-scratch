@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: header-args
+# key: <ha
+# --
+:PROPERTIES:
+:HEADER-ARGS:${1:jupyter-python:} ${2::exports both}$0
+:END:

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: listtable
+# key: <listt
+# --
+#+CAPTION: $1
+#+NAME: ${1:tablename}
+#+ATTR_ODT: :list-table t
+-
+  - $0
+- ----------------

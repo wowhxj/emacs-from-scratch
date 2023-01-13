@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: eshell
+# key: <esh
+# --
+#+BEGIN_SRC eshell
+$0
+#+END_SRC

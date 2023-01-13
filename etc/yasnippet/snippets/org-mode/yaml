@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: plantuml-yaml
+# key: <yaml
+# --
+#+BEGIN_SRC plantuml :file `(concat (file-name-base (buffer-name)) ".assets/" (format-time-string "uml_%Y%m%d_%H%M%S") ".png")` :width ${1:400}
+@startyaml
+scale 2
+$0
+@endyaml
+#+END_SRC

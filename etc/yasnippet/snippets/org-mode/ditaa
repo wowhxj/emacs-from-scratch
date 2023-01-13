@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: ditaa
+# key: <dt
+# --
+#+BEGIN_SRC ditaa :file `(concat (buffer-name) ".assets/" (format-time-string "dt_%Y%m%d_%H%M%S") ".png")`
+$0
+#+END_SRC

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: htmlhead
+# key: <hh
+# --
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://gongzhitaao.org/orgcss/org.css" />

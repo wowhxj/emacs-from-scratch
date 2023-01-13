@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: timeline-vertical
+# key: <tv
+# --
+#+TITLE: $0
+#+DESCRIPTION: Org-mode export for HTML timeline in vertical mode
+#+OPTIONS: num:nil
+#+TIMELINE_HEADER: <h2></h2>
+#+TIMELINE_HEADER: <p></p>
+#+TIMELINE_FOOTER: <h2></h2>
+#+TIMELINE_FOOTER: <p></p>
+#+HTML_HEAD: <link href="css/style.min.css" rel="stylesheet">
+#+TIMELINE_MODE:  vertical
+#+TIMELINE_VERTICAL_START_POSITION: left
+#+TIMELINE_VERTICAL_TRIGGER: 150x

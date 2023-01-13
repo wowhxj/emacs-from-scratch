@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: d2
+# key: <d2
+# --
+#+BEGIN_SRC d2 :file `(concat (file-name-base (buffer-name)) ".assets/" (format-time-string "d2_%Y%m%d_%H%M%S") ".png")` :width ${1:400}
+$0
+#+END_SRC

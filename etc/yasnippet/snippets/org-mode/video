@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: html5-video
+# key: <vid
+# --
+#+CAPTION: $1
+#+ATTR_HTML: :controls controls :width ${2:800}
+#+BEGIN_video
+#+HTML: <source src="$3" type="video/mp4">
+#+END_video

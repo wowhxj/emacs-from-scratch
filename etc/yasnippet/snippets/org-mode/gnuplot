@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: gnuplot
+# key: <gp
+# --
+#+BEGIN_SRC gnuplot :file `(concat (file-name-base (buffer-name)) ".assets/" (format-time-string "gnuplot_%Y%m%d_%H%M%S") ".png")` :width ${1:400}
+$0
+#+END_SRC

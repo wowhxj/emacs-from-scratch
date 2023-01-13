@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: plantuml-math
+# key: <math
+# --
+#+BEGIN_SRC plantuml :file `(concat (file-name-base (buffer-name)) ".assets/" (format-time-string "uml_%Y%m%d_%H%M%S") ".png")` :width ${1:400}
+@startmath
+$0
+@endmath
+#+END_SRC

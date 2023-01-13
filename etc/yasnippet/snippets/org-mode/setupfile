@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: setupfile
+# key: <sf
+# --
+#+STARTUP: overview
+src_emacs-lisp[:results raw]{(concat "#+SETUPFILE: " (locate-user-emacs-file "org-setupfile.org"))}
+#+OPTIONS: author:nil date:nil email:nil timestamp:nil num:t
+$0

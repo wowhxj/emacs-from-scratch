@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: withopen
+# key: <with
+# --
+with open("${1:filename}", "r+") as f:
+     f.$0

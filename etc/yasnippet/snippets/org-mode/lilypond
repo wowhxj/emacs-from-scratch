@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: lilypond
+# key: <li
+# --
+#+BEGIN_SRC lilypond :exports results :file `(concat (file-name-base (buffer-name)) ".assets/" (format-time-string "ll_%Y%m%d_%H%M%S") ".png")` :width ${1:300}
+$0
+#+END_SRC

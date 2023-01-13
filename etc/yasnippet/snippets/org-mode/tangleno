@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: tangleno
+# key: <tn
+# --
+:PROPERTIES:
+:HEADER-ARGS: :tangle no$0
+:END:

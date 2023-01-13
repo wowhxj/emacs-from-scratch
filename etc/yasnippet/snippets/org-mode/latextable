@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: latex-table
+# key: <lt
+# --
+#+ATTR_LATEX: :float nil :environment tabularx :width \textwidth :align $0

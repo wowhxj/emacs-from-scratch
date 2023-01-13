@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: sqlmidea
+# key: <sqlm
+# --
+#+BEGIN_SRC sql :engine mysql :database midea_cs :file `(concat (buffer-name) ".assets/" (format-time-string "sql_%Y%m%d_%H%M%S") ".sql")`
+$0
+#+END_SRC

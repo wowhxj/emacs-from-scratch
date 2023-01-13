@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: shell
+# key: <sh
+# --
+#+BEGIN_SRC shell
+$0
+#+END_SRC

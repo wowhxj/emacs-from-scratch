@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: plantuml-json
+# key: <json
+# --
+#+BEGIN_SRC plantuml :file `(concat (file-name-base (buffer-name)) ".assets/" (format-time-string "uml_%Y%m%d_%H%M%S") ".png")` :width ${1:400}
+@startjson
+scale 2
+$0
+@endjson
+#+END_SRC

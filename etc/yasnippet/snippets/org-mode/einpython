@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: ein-python
+# key: <ep
+# --
+#+BEGIN_SRC ein-python
+$0
+#+END_SRC

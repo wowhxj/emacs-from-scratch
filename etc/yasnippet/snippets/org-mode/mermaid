@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: mermaid
+# key: <mm
+# --
+#+BEGIN_SRC mermaid :file `(concat (file-name-base (buffer-name)) ".assets/" (format-time-string "mm_%Y%m%d_%H%M%S") ".png")` :width ${1:400}
+$0
+#+END_SRC

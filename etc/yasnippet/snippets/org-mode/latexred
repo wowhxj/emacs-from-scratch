@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: latex-red
+# key: <lred
+# --
+@@latex:{\color{red}@@ $0 @@latex:}@@

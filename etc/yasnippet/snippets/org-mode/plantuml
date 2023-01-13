@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: plantuml
+# key: <uml
+# --
+#+BEGIN_SRC plantuml :file `(concat (file-name-base (buffer-name)) ".assets/" (format-time-string "uml_%Y%m%d_%H%M%S") ".png")` :width ${1:400}
+@startuml
+!theme materia
+scale 2
+skinparam componentStyle rectangle
+$0
+@enduml
+#+END_SRC

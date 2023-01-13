@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: defun
+# key: <df
+# --
+(defun ${1:my/function-name}
+  "${2:function description}"
+  (interactive)
+  $0
+  )

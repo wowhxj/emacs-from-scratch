@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: imageattr
+# key: <attr
+# --
+#+ATTR_ORG: :width ${1:400} :align center
+#+ATTR_HTML: :width $1 :align center$0

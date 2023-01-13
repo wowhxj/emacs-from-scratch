@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: option
+# key: <opt
+# --
+#+OPTIONS: toc:nil num:4 H:4 ^:nil pri:t html-style:nil $0

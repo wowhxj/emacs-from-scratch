@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: customid
+# key: <ci
+# --
+:PROPERTIES:
+:CUSTOM_ID: `(concat (format-time-string "%Y-%m-%d-%H-%M") "-" (insert (my/get-current-headline-tree-structure)))`$0
+:END:

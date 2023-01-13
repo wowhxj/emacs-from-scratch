@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: html-color
+# key: <hc
+# --
+@@html:<b><font color="${1:blue}">@@$0@@html:</font></b>@@

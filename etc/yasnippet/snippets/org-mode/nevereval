@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: never eval babel
+# key: <ne
+# --
+# -*- org-export-babel-evaluate: nil -*-
+$0

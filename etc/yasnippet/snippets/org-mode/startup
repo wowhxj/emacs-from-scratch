@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: startup
+# key: <st
+# --
+#+STARTUP: overview indent$0

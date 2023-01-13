@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: hugoexport
+# key: <he
+# --
+:PROPERTIES:
+:EXPORT_FILE_NAME: `(my/get-current-headline-tree-structure)`$0
+:END:

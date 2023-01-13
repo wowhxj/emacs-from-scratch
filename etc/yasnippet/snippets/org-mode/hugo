@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: hugo
+# key: <hugo
+# --
+#+HUGO_BASE_DIR: /Users/randolph/Blog
+#+HUGO_SECTION: posts
+#+HUGO_PUBLISHDATE: `(format-time-string "%Y-%m-%d")`
+#+HUGO_CUSTOM_FRONT_MATTER: :hide - header - footer
+#+TOC: headlines 2$0
+#+FILETAGS: :$1:

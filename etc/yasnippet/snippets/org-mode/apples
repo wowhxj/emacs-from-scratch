@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: applescript
+# key: <apples
+# --
+#+BEGIN_SRC apples
+$0
+#+END_SRC

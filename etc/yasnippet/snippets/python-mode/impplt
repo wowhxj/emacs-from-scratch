@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: import-matplotlib
+# key: <plt
+# --
+import matplotlib.pyplot as plt
+plt.gcf().patch.set_facecolor('#ffffff')
+$0

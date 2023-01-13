@@ -142,6 +142,7 @@
     (require 'init-completion)            ; 补全系统
     (require 'init-tools)                 ; 相关工具
     (require 'init-base)                  ; 一些基本配置
+    (require 'init-dev)                   ; 开发相关配置
     )
 #+END_SRC
 
@@ -1857,4 +1858,88 @@ For locate on MacOS:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-tools.el ends here
 #+END_SRC
+
+* init-dev.el
+:PROPERTIES:
+:HEADER-ARGS: :tangle lisp/init-dev.el :mkdirp yes
+:END:
+
+** init-dev.el 文件头
+#+BEGIN_SRC emacs-lisp
+;;; init-dev.el --- Development settings -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;; Code:
+
+#+END_SRC
+
+** vc设置
+
+Emacs自带的vc设置。
+
+#+BEGIN_SRC emacs-lisp
+(use-package vc
+  :ensure nil
+  :custom
+  ;; 打开链接文件时，不进行追问
+  (vc-follow-symlinks t)
+  (vc-allow-async-revert t)
+  (vc-handled-backends '(Git)))
+#+END_SRC
+
+** magit版本管理
+
+[[https://github.com/magit/magit][magit]] 是Emacs里的另一个杀手级应用！可以直接在Emacs里进行基于git的版本管理。
+
+#+begin_src emacs-lisp
+(use-package magit
+  :ensure t
+  :hook (git-commit-mode . flyspell-mode)
+  :bind (("C-x g"   . magit-status)
+         ("C-x M-g" . magit-dispatch)
+         ("C-c M-g" . magit-file-dispatch))
+  :custom
+  (magit-diff-refine-hunk t)
+  (magit-ediff-dwim-show-on-hunks t))
+#+end_src
+
+** diff-hl高亮显示修改的部分
+
+[[https://github.com/dgutov/diff-hl][diff-hl]] 插件可以在左侧高亮显示相对于远程仓库的修改部分。
+
+#+BEGIN_SRC emacs-lisp
+(use-package diff-hl
+  :ensure t
+  :hook ((dired-mode         . diff-hl-dired-mode-unless-remote)
+         (magit-pre-refresh  . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :init
+  (global-diff-hl-mode t)
+  :config
+  ;; When Emacs runs in terminal, show the indicators in margin instead.
+  (unless (display-graphic-p)
+    (diff-hl-margin-mode)))
+#+END_SRC
+
+** magit-delta增强git diff
+
+[[https://github.com/dandavison/magit-delta][magit-delta]] 插件可以通过 =git-delta= 来更优化的方式显示diff内容（需要提前安装 =brew install git-delta= ）。
+
+#+BEGIN_SRC emacs-lisp
+(use-package magit-delta
+  :ensure t
+  :hook (magit-mode . magit-delta-mode)
+  :config
+  (setq magit-delta-hide-plus-minus-markers nil)
+  )
+#+END_SRC
+
+** init-dev.el 文件尾
+#+BEGIN_SRC emacs-lisp
+
+(provide 'init-dev)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init-dev.el ends here
+#+END_SRC
+
 

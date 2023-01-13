@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: autoinfo
+# key: <authinfo
+# --
+#+BEGIN_SRC authinfo
+$0
+#+END_SRC

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: ora-roam
+# key: <or
+# --
+#+STARTUP: overview
+#+SETUPFILE: ~/.emacs.d/org-setupfile.org
+#+OPTIONS: author:nil date:nil email:nil timestamp:nil
+
+#+HTML_LINK_UP: index.html
+#+HTML_LINK_HOME: index.html
+
+$0

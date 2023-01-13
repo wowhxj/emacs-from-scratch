@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: revealinit
+# key: <ri
+# --
+#+OPTIONS: toc:1
+#+REVEAL_INIT_OPTIONS: slideNumber:"c/t"
+$0
