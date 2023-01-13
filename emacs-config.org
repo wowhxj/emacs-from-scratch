@@ -717,6 +717,18 @@
   (defalias 'rename-file-and-buffer #'crux-rename-file-and-buffer))
 #+end_src
 
+** 个人函数定义
+
+以下是一些个人的函数定义，配置文件的其他部分会用到这些函数。
+
+#+BEGIN_SRC emacs-lisp
+;; 将列表加入到列表
+(defun add-list-to-list (dst src)
+  "Similar to `add-to-list', but accepts a list as 2nd argument"
+  (set dst
+       (append (eval dst) src)))
+#+END_SRC
+
 ** init-base.el 文件尾
 #+BEGIN_SRC emacs-lisp
 
@@ -1360,48 +1372,48 @@ Optional for Org-mode file: `LINK'."
 [[https://protesilaos.com/emacs/denote][denote]] 是一个轻量级的笔记插件，拥有良好的文件名命名模板。
 
 #+BEGIN_SRC emacs-lisp
-  (use-package denote
-    :ensure t
-    :hook (dired-mode . denote-dired-mode-in-directories)
-    :bind (("C-c d n" . denote)
-           ("C-c d d" . denote-date)
-           ("C-c d t" . denote-type)
-           ("C-c d s" . denote-subdirectory)
-           ("C-c d f" . denote-open-or-create)
-           ("C-c d r" . denote-dired-rename-file))
-    :init
-    (with-eval-after-load 'org-capture
-      (setq denote-org-capture-specifiers "%l\n%i\n%?")
-      (add-to-list 'org-capture-templates
-                   '("N" "New note (with denote.el)" plain
-                     (file denote-last-path)
-                     #'denote-org-capture
-                     :no-save t
-                     :immediate-finish nil
-                     :kill-buffer t
-                     :jump-to-captured t)))
-    :config
-    (setq denote-directory (expand-file-name "~/org/"))
-    (setq denote-known-keywords '("emacs" "entertainment" "reading" "studying"))
-    (setq denote-infer-keywords t)
-    (setq denote-sort-keywords t)
-    ;; org is default, set others such as text, markdown-yaml, markdown-toml
-    (setq denote-file-type nil)
-    (setq denote-prompts '(title keywords))
+(use-package denote
+  :ensure t
+  :hook (dired-mode . denote-dired-mode-in-directories)
+  :bind (("C-c d n" . denote)
+         ("C-c d d" . denote-date)
+         ("C-c d t" . denote-type)
+         ("C-c d s" . denote-subdirectory)
+         ("C-c d f" . denote-open-or-create)
+         ("C-c d r" . denote-dired-rename-file))
+  :init
+  (with-eval-after-load 'org-capture
+    (setq denote-org-capture-specifiers "%l\n%i\n%?")
+    (add-to-list 'org-capture-templates
+                 '("N" "New note (with denote.el)" plain
+                   (file denote-last-path)
+                   #'denote-org-capture
+                   :no-save t
+                   :immediate-finish nil
+                   :kill-buffer t
+                   :jump-to-captured t)))
+  :config
+  (setq denote-directory (expand-file-name "~/org/"))
+  (setq denote-known-keywords '("emacs" "entertainment" "reading" "studying"))
+  (setq denote-infer-keywords t)
+  (setq denote-sort-keywords t)
+  ;; org is default, set others such as text, markdown-yaml, markdown-toml
+  (setq denote-file-type nil)
+  (setq denote-prompts '(title keywords))
 
-    ;; We allow multi-word keywords by default.  The author's personal
-    ;; preference is for single-word keywords for a more rigid workflow.
-    (setq denote-allow-multi-word-keywords t)
-    (setq denote-date-format nil)
+  ;; We allow multi-word keywords by default.  The author's personal
+  ;; preference is for single-word keywords for a more rigid workflow.
+  (setq denote-allow-multi-word-keywords t)
+  (setq denote-date-format nil)
 
-    ;; If you use Markdown or plain text files (Org renders links as buttons
-    ;; right away)
-    (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-    (setq denote-dired-rename-expert nil)
+  ;; If you use Markdown or plain text files (Org renders links as buttons
+  ;; right away)
+  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+  (setq denote-dired-rename-expert nil)
 
-    ;; OR if only want it in `denote-dired-directories':
-    (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
-    )
+  ;; OR if only want it in `denote-dired-directories':
+  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+  )
 #+END_SRC
 
 ** consult-notes查找笔记
@@ -1475,6 +1487,223 @@ Marked 2 is a mac app that renders markdown."
   :config
   (setq org-super-links-related-into-drawer t)
   (setq	org-super-links-link-prefix 'org-super-links-link-prefix-timestamp))
+#+END_SRC
+
+** org-src代码块基础配置
+
+Org mode代码块的基本配置。
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-src
+  :ensure nil
+  :hook (org-babel-after-execute . org-redisplay-inline-images)
+  :bind (("s-l" . show-line-number-in-src-block)
+         :map org-src-mode-map
+         ("C-c C-c" . org-edit-src-exit))
+  :init
+  ;; 设置代码块的默认头参数
+  (setq org-babel-default-header-args
+        '(
+          (:eval    . "never-export")     ; 导出时不执行代码块
+          (:session . "none")
+          (:results . "replace")          ; 执行结果替换
+          (:exports . "both")             ; 导出代码和结果
+          (:cache   . "no")
+          (:noweb   . "no")
+          (:hlines  . "no")
+          (:wrap    . "results")          ; 结果通过#+begin_results包裹
+          (:tangle  . "no")               ; 不写入文件
+          ))
+  :config
+  ;; ==================================
+  ;; 如果出现代码运行结果为乱码，可以参考：
+  ;; https://github.com/nnicandro/emacs-jupyter/issues/366
+  ;; ==================================
+  (defun display-ansi-colors ()
+    (ansi-color-apply-on-region (point-min) (point-max)))
+  (add-hook 'org-babel-after-execute-hook #'display-ansi-colors)
+
+  ;; ==============================================
+  ;; 通过overlay在代码块里显示行号，s-l显示，任意键关闭
+  ;; ==============================================
+  (defvar number-line-overlays '()
+    "List of overlays for line numbers.")
+
+  (defun show-line-number-in-src-block ()
+    (interactive)
+    (save-excursion
+      (let* ((src-block (org-element-context))
+             (nlines (- (length
+                         (s-split
+                          "\n"
+                          (org-element-property :value src-block)))
+                        1)))
+        (goto-char (org-element-property :begin src-block))
+        (re-search-forward (regexp-quote (org-element-property :value src-block)))
+        (goto-char (match-beginning 0))
+
+        (cl-loop for i from 1 to nlines
+                 do
+                 (beginning-of-line)
+                 (let (ov)
+                   (setq ov (make-overlay (point) (point)))
+                   (overlay-put ov 'before-string (format "%3s | " (number-to-string i)))
+                   (add-to-list 'number-line-overlays ov))
+                 (next-line))))
+
+    ;; now read a char to clear them
+    (read-key "Press a key to clear numbers.")
+    (mapc 'delete-overlay number-line-overlays)
+    (setq number-line-overlays '()))
+
+  ;; =================================================
+  ;; 执行结果后，如果结果所在的文件夹不存在将自动创建
+  ;; =================================================
+  (defun check-directory-exists-before-src-execution (orig-fun
+                                                      &optional arg
+                                                      info
+                                                      params)
+    (when (and (assq ':file (cadr (cdr (org-babel-get-src-block-info))))
+               (member (car (org-babel-get-src-block-info)) '("mermaid" "ditaa" "dot" "lilypond" "plantuml" "gnuplot" "d2")))
+      (let ((foldername (file-name-directory (alist-get :file (nth 2 (org-babel-get-src-block-info))))))
+        (if (not (file-exists-p foldername))
+            (mkdir foldername)))))
+  (advice-add 'org-babel-execute-src-block :before #'check-directory-exists-before-src-execution)
+
+  ;; =================================================
+  ;; 自动给结果的图片加上相关属性
+  ;; =================================================
+  (setq original-image-width-before-del "400") ; 设置图片的默认宽度为400
+  (setq original-caption-before-del "")        ; 设置默认的图示文本为空
+
+  (defun insert-attr-decls ()
+    "insert string before babel execution results"
+    (insert (concat "\n#+CAPTION:"
+                    original-caption-before-del
+                    "\n#+ATTR_ORG: :width "
+                    original-image-width-before-del
+                    "\n#+ATTR_LATEX: :width "
+                    (if (>= (/ (string-to-number original-image-width-before-del) 800.0) 1)
+                        "1.0"
+                      (number-to-string (/ (string-to-number original-image-width-before-del) 800.0)))
+                    "\\linewidth :float nil"
+                    "\n#+ATTR_HTML: :width "
+                    original-image-width-before-del
+                    )))
+
+  (defun insert-attr-decls-at (s)
+    "insert string right after specific string"
+    (let ((case-fold-search t))
+      (if (search-forward s nil t)
+          (progn
+            ;; (search-backward s nil t)
+            (insert-attr-decls)))))
+
+  (defun insert-attr-decls-at-results (orig-fun
+                                       &optional arg
+                                       info
+                                       param)
+    "insert extra image attributes after babel execution"
+    (interactive)
+    (progn
+      (when (member (car (org-babel-get-src-block-info)) '("mermaid" "ditaa" "dot" "lilypond" "plantuml" "gnuplot" "d2"))
+        (setq original-image-width-before-del (number-to-string (if-let* ((babel-width (alist-get :width (nth 2 (org-babel-get-src-block-info))))) babel-width (string-to-number original-image-width-before-del))))
+        (save-excursion
+          ;; `#+begin_results' for :wrap results, `#+RESULTS:' for non :wrap results
+          (insert-attr-decls-at "#+begin_results")))
+      (org-redisplay-inline-images)))
+  (advice-add 'org-babel-execute-src-block :after #'insert-attr-decls-at-results)
+
+  ;; 再次执行时需要将旧的图片相关参数行删除，并从中头参数中获得宽度参数，参考
+  ;; https://emacs.stackexchange.com/questions/57710/how-to-set-image-size-in-result-of-src-block-in-org-mode
+  (defun get-attributes-from-src-block-result (&rest args)
+    "get information via last babel execution"
+    (let ((location (org-babel-where-is-src-block-result))
+          ;; 主要获取的是图示文字和宽度信息，下面这个正则就是为了捕获这两个信息
+          (attr-regexp "[:blank:]*#\\+\\(ATTR_ORG: :width \\([0-9]\\{3\\}\\)\\|CAPTION:\\(.*\\)\\)"))
+      (setq original-caption-before-del "") ; 重置为空
+      (when location
+        (save-excursion
+          (goto-char location)
+          (when (looking-at (concat org-babel-result-regexp ".*$"))
+            (next-line 2)               ; 因为有个begin_result的抽屉，所以往下2行
+            ;; 通过正则表达式来捕获需要的信息
+            (while (looking-at attr-regexp)
+              (when (match-string 2)
+                (setq original-image-width-before-del (match-string 2)))
+              (when (match-string 3)
+                (setq original-caption-before-del (match-string 3)))
+              (next-line)               ; 因为设置了:wrap，所以这里不需要删除这一行
+              )
+            )))))
+  (advice-add 'org-babel-execute-src-block :before #'get-attributes-from-src-block-result)
+
+  :custom
+  ;; 代码块语法高亮
+  (org-src-fontify-natively t)
+  ;; 使用编程语言的TAB绑定设置
+  (org-src-tab-acts-natively t)
+  ;; 保留代码块前面的空格
+  (org-src-preserve-indentation t)
+  ;; 代码块编辑窗口的打开方式：当前窗口+代码块编辑窗口
+  (org-src-window-setup 'reorganize-frame)
+  ;; 执行前是否需要确认
+  (org-confirm-babel-evaluate nil)
+  ;; 代码块默认前置多少空格
+  (org-edit-src-content-indentation 0)
+  ;; 代码块的语言模式设置，设置之后才能正确语法高亮
+  (org-src-lang-modes '(("C"            . c)
+                        ("C++"          . c++)
+                        ("bash"         . sh)
+                        ("cpp"          . c++)
+                        ("elisp"        . emacs-lisp)
+                        ("python"       . python)
+                        ("shell"        . sh)
+                        ("mysql"        . sql)
+                        ))
+  ;; 在这个阶段，只需要加载默认支持的语言
+  (org-babel-load-languages '((python          . t)
+                              (awk             . t)
+                              (C               . t)
+                              (calc            . t)
+                              (emacs-lisp      . t)
+                              (eshell          . t)
+                              (shell           . t)
+                              (sql             . t)
+                              (css             . t)
+                              ))
+  )
+#+END_SRC
+
+** 限制代码块结果长度
+
+参考 [[https://emacs-china.org/t/org-babel/18399/4][twlz0ne 大佬在这篇贴子的回复]]。
+
+#+BEGIN_SRC emacs-lisp
+;; limit the babel result length
+(defvar org-babel-result-lines-limit 40)
+(defvar org-babel-result-length-limit 6000)
+
+(defun org-babel-insert-result@limit (orig-fn result &rest args)
+  (if (not (member (car (org-babel-get-src-block-info)) '("jupyter-python"))) ; not for jupyter-python etc.
+    (if (and result (or org-babel-result-lines-limit org-babel-result-length-limit))
+        (let (new-result plines plenght limit)
+          (with-temp-buffer
+            (insert result)
+            (setq plines (if org-babel-result-lines-limit
+                             (goto-line org-babel-result-lines-limit)
+                           (point-max)))
+            (setq plenght (if org-babel-result-length-limit
+                              (min org-babel-result-length-limit (point-max))
+                            (point-max)))
+            (setq limit (min plines plenght))
+            (setq new-result (concat (buffer-substring (point-min) limit)
+                                     (if (< limit (point-max)) "..."))))
+          (apply orig-fn new-result args))
+      (apply orig-fn result args))
+    (apply orig-fn result args)))
+
+(advice-add 'org-babel-insert-result :around #'org-babel-insert-result@limit)
 #+END_SRC
 
 ** init-org.el 文件尾
@@ -1932,6 +2161,125 @@ Emacs自带的vc设置。
   :config
   (setq magit-delta-hide-plus-minus-markers nil)
   )
+#+END_SRC
+
+** paren高亮匹配的括号
+
+#+BEGIN_SRC emacs-lisp
+(use-package paren
+  :ensure nil
+  :hook (after-init . show-paren-mode)
+  :custom
+  (show-paren-when-point-inside-paren t)
+  (show-paren-when-point-in-periphery t))
+#+END_SRC
+
+** rainbow-delimeters多彩括号
+
+[[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] 插件将多彩显示括号等分隔符。
+
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+** emacs-lisp语言设置
+
+#+BEGIN_SRC emacs-lisp
+(use-package elisp-mode
+  :ensure nil
+  :after org
+  :bind (:map emacs-lisp-mode-map
+              ("C-c C-b" . eval-buffer)
+              ("C-c C-c" . eval-to-comment)
+              :map lisp-interaction-mode-map
+              ("C-c C-c" . eval-to-comment)
+              :map org-mode-map
+              ("C-c C-;" . eval-to-comment)
+              )
+  :init
+  ;; for emacs-lisp org babel
+  (add-to-list 'org-babel-default-header-args:emacs-lisp
+             '(:results . "value pp"))
+  :config
+  (defconst eval-as-comment-prefix " ⇒ ")
+  (defun eval-to-comment (&optional arg)
+    (interactive "P")
+    ;; (if (not (looking-back ";\\s*"))
+    ;;     (call-interactively 'comment-dwim))
+    (call-interactively 'comment-dwim)
+    (progn
+      (search-backward ";")
+      (forward-char 1))
+    (delete-region (point) (line-end-position))
+    (save-excursion
+      (let ((current-prefix-arg '(4)))
+        (call-interactively 'eval-last-sexp)))
+    (insert eval-as-comment-prefix)
+    (end-of-line 1))
+  )
+#+END_SRC
+
+** Python语言设置
+
+Python语言的设置。[[https://github.com/paetzke/py-autopep8.el][py-autopep8.el]] 插件可以让我们在编写Python保存文件的时候，自动以 =PEP8= 标准做格式美化（需要提前 =brew install autopep8= ）。
+
+#+BEGIN_SRC emacs-lisp
+(use-package python
+  :ensure nil
+  :mode ("\\.py\\'" . python-mode)
+  :init
+  (add-list-to-list 'org-babel-default-header-args:python '((:results . "output pp")
+                                                            (:noweb   . "yes")
+                                                            (:session . "py")
+                                                            (:async   . "yes")
+                                                            (:exports . "both")
+                                                            ))
+  :config
+  (setq python-indent-offset 4)
+  ;; Disable readline based native completion
+  (setq python-shell-completion-native-enable nil)
+  (setq python-indent-guess-indent-offset-verbose nil)
+  (setq python-shell-interpreter "python3"
+        python-shell-prompt-detect-failure-warning nil)
+  ;; disable native completion
+  (add-to-list 'python-shell-completion-native-disabled-interpreters "python3")
+  ;; Env vars
+  (with-eval-after-load 'exec-path-from-shell
+    (exec-path-from-shell-copy-env "PYTHONPATH"))
+  )
+
+;; need to pip install autopep8 first
+(use-package py-autopep8
+  :ensure t
+  :hook (python-mode . py-autopep8-mode)
+  )
+#+END_SRC
+
+** Shell语言设置
+
+#+BEGIN_SRC emacs-lisp
+(use-package sh-script
+  :ensure nil
+  :mode (("\\.sh\\'"     . sh-mode)
+         ("zshrc"        . sh-mode)
+         ("zshenv"       . sh-mode)
+         ("/PKGBUILD\\'" . sh-mode))
+  :hook (sh-mode . sh-mode-setup)
+  :bind (:map sh-mode-map
+         ("C-c C-e" . sh-execute-region))
+  :init
+  ;; for org babel
+  (add-list-to-list 'org-babel-default-header-args:shell
+                  '((:results . "output")
+                    (:tangle  . "no")))
+  :config
+  (defun sh-mode-setup ()
+    (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p nil t))
+  :custom
+  (sh-basic-offset 2)
+  (sh-indentation 2))
 #+END_SRC
 
 ** init-dev.el 文件尾

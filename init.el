@@ -51,21 +51,21 @@
 (use-package quelpa-use-package
   :ensure t)
 
-;; 将lisp目录放到加载路径的前面以加快启动速度
-(let ((dir (locate-user-emacs-file "lisp")))
-  (add-to-list 'load-path (file-name-as-directory dir)))
+  ;; 将lisp目录放到加载路径的前面以加快启动速度
+  (let ((dir (locate-user-emacs-file "lisp")))
+    (add-to-list 'load-path (file-name-as-directory dir)))
 
-;; 加载各模块化配置
-;; 不要在`*message*'缓冲区显示加载模块化配置的信息
-(with-temp-message ""
-  (require 'init-ui)                    ; UI交互
-  (require 'init-edit)                  ; 编辑行为
-  (require 'init-org)                   ; org相关设置
-  (require 'init-completion)            ; 补全系统
-  (require 'init-tools)                 ; 相关工具
-  (require 'init-base)                  ; 一些基本配置
-  (require 'init-dev)                   ; 开发相关配置
-  )
+  ;; 加载各模块化配置
+  ;; 不要在`*message*'缓冲区显示加载模块化配置的信息
+  (with-temp-message ""
+    (require 'init-ui)                    ; UI交互
+    (require 'init-edit)                  ; 编辑行为
+    (require 'init-org)                   ; org相关设置
+    (require 'init-completion)            ; 补全系统
+    (require 'init-tools)                 ; 相关工具
+    (require 'init-base)                  ; 一些基本配置
+    (require 'init-dev)                   ; 开发相关配置
+    )
 
 (provide 'init)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
