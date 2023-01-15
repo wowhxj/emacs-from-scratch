@@ -1675,6 +1675,92 @@ Org mode代码块的基本配置。
   )
 #+END_SRC
 
+** org babel代码块后端
+*** plantuml绘图
+[[https://plantuml.com/zh/][plantuml]] 可以让我们在Org mode里通过纯文本画各种图，具体参考：[[https://plantuml.com/zh/emacs][PlantUML integration with Emacs]]。
+
+需要提前通过 =brew install plantuml= 安装 =plantuml= 。
+
+#+BEGIN_SRC emacs-lisp
+(use-package plantuml-mode
+  :ensure t
+  :mode ("\\.plantuml\\'" . plantuml-mode)
+  :init
+  ;; enable plantuml babel support
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               (append org-babel-load-languages
+                                       '((plantuml . t))))
+  :config
+  (setq org-plantuml-exec-mode 'plantuml)
+  (setq org-plantuml-executable-path "plantuml")
+  (setq plantuml-executable-path "plantuml")
+  (setq plantuml-default-exec-mode 'executable)
+  ;; set default babel header arguments
+  (setq org-babel-default-header-args:plantuml
+        '((:exports . "results")
+          (:results . "file")
+          ))
+  )
+#+END_SRC
+
+*** gnuplot绘图
+
+[[https://github.com/emacs-gnuplot/gnuplot][gnuplot]] 插件可以让Emacs通过gnuplot绘图。
+
+#+BEGIN_SRC emacs-lisp
+(use-package gnuplot
+  :ensure t
+  :mode ("\\.gp$" . gnuplot-mode)
+  :init
+  (add-to-list 'org-src-lang-modes '("gnuplot" . gnuplot))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               (append org-babel-load-languages
+                                       '((gnuplot . t))))
+  :config
+  ;; (add-to-list 'auto-mode-alist '("\\.gp$" . gnuplot-mode))
+  (setq org-babel-default-header-args:gnuplot
+      '((:exports . "results")
+        (:results . "file")))
+  )
+#+END_SRC
+
+*** lilypond乐谱绘图
+
+通过 =lilypond= 乐谱画图，需要提前安装 =lilypond= 和 =mactex-no-gui= 。
+
+#+BEGIN_SRC emacs-lisp
+(use-package lilypond-mode
+  :ensure nil
+  :mode ("\\.i?ly\\'" . LilyPond-mode)
+  :init
+  (add-to-list 'org-src-lang-modes '("lilypond" . lilypond))
+  ;; add support for org babel
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               (append org-babel-load-languages
+                                       '((lilypond . t))))
+  ;; set lilypond binary directory
+  (setq org-babel-lilypond-ly-command "/usr/local/bin/lilypond -dpreview")
+  :config
+  ;; ;; trim extra space for generated image
+  ;; (defun my/trim-lilypond-png (orig-fun
+  ;;                              &optional arg
+  ;;                              info
+  ;;                              param)
+  ;;   (when (member (car (org-babel-get-src-block-info)) '("lilypond"))
+  ;;     (let ((ly-file (alist-get :file (nth 2 (org-babel-get-src-block-info)))))
+  ;;       (let ((ly-preview-file (replace-regexp-in-string "\\.png" ".preview.png" ly-file)))
+  ;;         (when (file-exists-p ly-preview-file)
+  ;;           (shell-command (concat "mv " ly-preview-file " " ly-file)))
+  ;;         (org-redisplay-inline-images)))))
+  ;; (advice-add 'org-babel-execute-src-block :after #'my/trim-lilypond-png)
+  (setq ob-lilypond-header-args
+        '((:results . "file replace")
+          (:exports . "results")
+          ))
+  )
+#+END_SRC
+
 ** 限制代码块结果长度
 
 参考 [[https://emacs-china.org/t/org-babel/18399/4][twlz0ne 大佬在这篇贴子的回复]]。

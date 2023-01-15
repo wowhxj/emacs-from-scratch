@@ -645,6 +645,72 @@ Marked 2 is a mac app that renders markdown."
                               ))
   )
 
+(use-package plantuml-mode
+  :ensure t
+  :mode ("\\.plantuml\\'" . plantuml-mode)
+  :init
+  ;; enable plantuml babel support
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               (append org-babel-load-languages
+                                       '((plantuml . t))))
+  :config
+  (setq org-plantuml-exec-mode 'plantuml)
+  (setq org-plantuml-executable-path "plantuml")
+  (setq plantuml-executable-path "plantuml")
+  (setq plantuml-default-exec-mode 'executable)
+  ;; set default babel header arguments
+  (setq org-babel-default-header-args:plantuml
+        '((:exports . "results")
+          (:results . "file")
+          ))
+  )
+
+(use-package gnuplot
+  :ensure t
+  :mode ("\\.gp$" . gnuplot-mode)
+  :init
+  (add-to-list 'org-src-lang-modes '("gnuplot" . gnuplot))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               (append org-babel-load-languages
+                                       '((gnuplot . t))))
+  :config
+  ;; (add-to-list 'auto-mode-alist '("\\.gp$" . gnuplot-mode))
+  (setq org-babel-default-header-args:gnuplot
+      '((:exports . "results")
+        (:results . "file")))
+  )
+
+(use-package lilypond-mode
+  :ensure nil
+  :mode ("\\.i?ly\\'" . LilyPond-mode)
+  :init
+  (add-to-list 'org-src-lang-modes '("lilypond" . lilypond))
+  ;; add support for org babel
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               (append org-babel-load-languages
+                                       '((lilypond . t))))
+  ;; set lilypond binary directory
+  (setq org-babel-lilypond-ly-command "/usr/local/bin/lilypond -dpreview")
+  :config
+  ;; ;; trim extra space for generated image
+  ;; (defun my/trim-lilypond-png (orig-fun
+  ;;                              &optional arg
+  ;;                              info
+  ;;                              param)
+  ;;   (when (member (car (org-babel-get-src-block-info)) '("lilypond"))
+  ;;     (let ((ly-file (alist-get :file (nth 2 (org-babel-get-src-block-info)))))
+  ;;       (let ((ly-preview-file (replace-regexp-in-string "\\.png" ".preview.png" ly-file)))
+  ;;         (when (file-exists-p ly-preview-file)
+  ;;           (shell-command (concat "mv " ly-preview-file " " ly-file)))
+  ;;         (org-redisplay-inline-images)))))
+  ;; (advice-add 'org-babel-execute-src-block :after #'my/trim-lilypond-png)
+  (setq ob-lilypond-header-args
+        '((:results . "file replace")
+          (:exports . "results")
+          ))
+  )
+
 ;; limit the babel result length
 (defvar org-babel-result-lines-limit 40)
 (defvar org-babel-result-length-limit 6000)
