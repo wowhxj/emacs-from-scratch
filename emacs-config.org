@@ -4,6 +4,8 @@
 #+DATE: 2022/12/22 14:23:50
 
 #+STARTUP: overview
+#+SETUPFILE: ~/.emacs.d.default/org-setupfile.org
+#+OPTIONS: author:nil date:nil email:nil timestamp:nil num:t
 
 * early-init.el
 :PROPERTIES:
@@ -1791,6 +1793,203 @@ Org mode代码块的基本配置。
 
 (advice-add 'org-babel-insert-result :around #'org-babel-insert-result@limit)
 #+END_SRC
+
+** ox文件导出通用设置
+
+下面是org文件导出的通用设置。
+
+#+begin_src emacs-lisp
+(use-package ox
+  :ensure nil
+  :custom
+  (org-export-with-toc t)
+  (org-export-with-tags 'not-in-toc)
+  (org-export-with-drawers nil)
+  (org-export-with-priority t)
+  (org-export-with-footnotes t)
+  (org-export-with-smart-quotes t)
+  (org-export-with-section-numbers t)
+  (org-export-with-sub-superscripts '{})
+  ;; `org-export-use-babel' set to nil will cause all source block header arguments to be ignored This means that code blocks with the argument :exports none or :exports results will end up in the export.
+  ;; See:
+  ;; https://stackoverflow.com/questions/29952543/how-do-i-prevent-org-mode-from-executing-all-of-the-babel-source-blocks
+  (org-export-use-babel t)
+  (org-export-headline-levels 9)
+  (org-export-coding-system 'utf-8)
+  (org-export-with-broken-links 'mark)
+  (org-export-default-language "zh-CN") ; 默认是en
+  ;; (org-ascii-text-width 72)
+  )
+
+;; export extra
+(use-package ox-extra
+  :ensure nil
+  :config
+  (ox-extras-activate '(ignore-headlines))
+  )
+#+end_src
+
+** org导出后端设置
+*** ox-html导出HTML设置
+
+我们先来对HTML导出做一个基本设置：
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-html
+  :ensure nil
+  :init
+  ;; add support for video
+  (defun org-video-link-export (path desc backend)
+    (let ((ext (file-name-extension path)))
+      (cond
+       ((eq 'html backend)
+        (format "<video width='800' preload='metadata' controls='controls'><source type='video/%s' src='%s' /></video>" ext path))
+       ;; fall-through case for everything else
+       (t
+        path))))
+  (org-link-set-parameters "video" :export 'org-video-link-export)
+  :custom
+  (org-html-doctype "html5")
+  (org-html-html5-fancy t)
+  (org-html-checkbox-type 'unicode)
+  (org-html-validation-link nil))
+
+(use-package htmlize
+  :ensure t
+  :custom
+  (htmlize-pre-style t)
+  (htmlize-output-type 'inline-css))
+#+END_SRC
+
+*** ox-latex导出PDF设置
+
+=ox-latex= 是Org mode自带的功能，可以将Org文件导出为latex文件和PDF文件。
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-latex
+  :ensure nil
+  :defer t
+  :config
+  (add-to-list 'org-latex-classes
+               '("cn-article"
+                 "\\documentclass[UTF8,a4paper]{article}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("cn-report"
+                 "\\documentclass[11pt,a4paper]{report}"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+  (setq org-latex-default-class "cn-article")
+  (setq org-latex-image-default-height "0.9\\textheight"
+        org-latex-image-default-width "\\linewidth")
+  (setq org-latex-pdf-process
+	    '("xelatex -interaction nonstopmode -output-directory %o %f"
+	      "bibtex %b"
+	      "xelatex -interaction nonstopmode -output-directory %o %f"
+	      "xelatex -interaction nonstopmode -output-directory %o %f"
+	      "rm -fr %b.out %b.log %b.tex %b.brf %b.bbl auto"
+	      ))
+  ;; 使用 Listings 宏包格式化源代码(只是把代码框用 listing 环境框起来，还需要额外的设置)
+  (setq org-latex-listings t)
+  ;; mapping jupyter-python to Python
+  (add-to-list 'org-latex-listings-langs '(jupyter-python "Python"))
+  ;; Options for \lset command（reference to listing Manual)
+  (setq org-latex-listings-options
+        '(
+          ("basicstyle" "\\small\\ttfamily")       ; 源代码字体样式
+          ("keywordstyle" "\\color{eminence}\\small")                 ; 关键词字体样式
+          ;; ("identifierstyle" "\\color{doc}\\small")
+          ("commentstyle" "\\color{commentgreen}\\small\\itshape")    ; 批注样式
+          ("stringstyle" "\\color{red}\\small")                       ; 字符串样式
+          ("showstringspaces" "false")                                ; 字符串空格显示
+          ("numbers" "left")                                          ; 行号显示
+          ("numberstyle" "\\color{preprocess}")                       ; 行号样式
+          ("stepnumber" "1")                                          ; 行号递增
+          ("xleftmargin" "2em")                                       ;
+          ;; ("backgroundcolor" "\\color{background}")                   ; 代码框背景色
+          ("tabsize" "4")                                             ; TAB 等效空格数
+          ("captionpos" "t")                                          ; 标题位置 top or buttom(t|b)
+          ("breaklines" "true")                                       ; 自动断行
+          ("breakatwhitespace" "true")                                ; 只在空格分行
+          ("showspaces" "false")                                      ; 显示空格
+          ("columns" "flexible")                                      ; 列样式
+          ("frame" "tb")                                              ; 代码框：single, or tb 上下线
+          ("frameleftmargin" "1.5em")                                 ; frame 向右偏移
+          ;; ("frameround" "tttt")                                       ; 代码框： 圆角
+          ;; ("framesep" "0pt")
+          ;; ("framerule" "1pt")                                         ; 框的线宽
+          ;; ("rulecolor" "\\color{background}")                         ; 框颜色
+          ;; ("fillcolor" "\\color{white}")
+          ;; ("rulesepcolor" "\\color{comdil}")
+          ("framexleftmargin" "5mm")                                  ; let line numer inside frame
+          ))
+  )
+#+END_SRC
+
+*** ox-reveal导出幻灯片设置
+
+我们可以 [[https://github.com/hexmode/ox-reveal][ox-reveal]] 插件，将org文件导出为漂亮的幻灯片。需要提前 [[https://revealjs.com/installation/][安装reveal.js]]：
+
+1. 克隆 =reveal.js= 项目
+   #+BEGIN_SRC shell :tangle no
+cd ~/.emacs.d/ && git clone https://github.com/hakimel/reveal.js.git
+   #+END_SRC
+2. 安装依赖
+   #+BEGIN_SRC shell :tangle no
+cd reveal.js && npm install
+   #+END_SRC
+
+#+begin_src emacs-lisp
+(use-package ox-reveal
+  :ensure t
+  :after ox
+  :config
+  (setq org-reveal-hlevel 1)
+  ;; Avalable themes: night, black, white, league, beige, sky, serif, simple, solarized, blood, moon
+  (setq org-reveal-theme "moon")
+  ;; can also set root to a CDN cloud: https://cdn.jsdelivr.net/npm/reveal.js
+  (setq org-reveal-root (expand-file-name "reveal.js" user-emacs-directory))
+  (setq org-reveal-mathjax t)
+  (setq org-reveal-ignore-speaker-notes t)
+  ;; original title font size is TOO large!
+  (setq org-reveal-title-slide "<h1><font size=\"8\">%t</font></h1><h2><font size=\"6\">%s</font></h2><p><font size=\"5\">%a</font><br/><font size=\"5\">%d</font></p>")
+  ;; don't load highlight, use htmlize instead. If you want to add line-number, add -n in src block header
+  (setq org-reveal-plugins '(markdown zoom notes search))
+  (setq org-reveal-klipsify-src 'on)
+  (setq org-reveal-extra-css (expand-file-name "reveal.js/css/extra.css" user-emacs-directory))
+  )
+#+end_src
+
+*** ox-gfm导出Markdown设置
+
+我们通过 [[https://github.com/larstvei/ox-gfm][ox-gfm]] 插件来导出Github样式的Markdown文件。
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-gfm
+  :ensure t
+  :after ox)
+#+END_SRC
+
+*** ox-pandoc导出各种格式设置
+
+[[https://github.com/kawabata/ox-pandoc][ox-pandoc]] 可以将org文件导出为各种格式的文件，需要提前安装 =brew install pandoc= 。
+
+#+begin_src emacs-lisp
+(use-package ox-pandoc
+  :ensure t
+  :custom
+  ;; special extensions for markdown_github output
+  (org-pandoc-format-extensions '(markdown_github+pipe_tables+raw_html))
+  (org-pandoc-command "/usr/local/bin/pandoc")
+  )
+#+end_src
 
 ** init-org.el 文件尾
 
