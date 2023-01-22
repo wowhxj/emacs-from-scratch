@@ -887,6 +887,86 @@ Marked 2 is a mac app that renders markdown."
   (org-pandoc-command "/usr/local/bin/pandoc")
   )
 
+(use-package ox-publish
+  :ensure nil
+  :commands (org-publish org-publish-all)
+  :config
+  (setq org-export-global-macros
+      '(("timestamp" . "@@html:<span class=\"timestamp\">[$1]</span>@@")))
+
+  ;; sitemap 生成函数
+  (defun my/org-sitemap-date-entry-format (entry style project)
+    "Format ENTRY in org-publish PROJECT Sitemap format ENTRY ENTRY STYLE format that includes date."
+    (let ((filename (org-publish-find-title entry project)))
+      (if (= (length filename) 0)
+          (format "*%s*" entry)
+        (format "{{{timestamp(%s)}}} [[file:%s][%s]]"
+                (format-time-string "%Y-%m-%d"
+                                    (org-publish-find-date entry project))
+                entry
+                filename))))
+
+  ;; 设置 org-publish 的项目列表
+  (setq org-publish-project-alist
+        '(
+          ;; 笔记部分
+          ("org-notes"
+           :base-directory "~/org/"
+           :base-extension "org"
+           :exclude "\\(tasks\\|test\\|scratch\\|diary\\|capture\\|mail\\|habits\\|resume\\|meetings\\|personal\\|org-beamer-example\\)\\.org\\|test\\|article\\|roam\\|hugo"
+           :publishing-directory "~/public_html/"
+           :recursive t                 ; include subdirectories if t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 6
+           :auto-preamble t
+           :auto-sitemap t
+           :sitemap-filename "sitemap.org"
+           :sitemap-title "Sitemap"
+           :sitemap-format-entry my/org-sitemap-date-entry-format)
+
+          ;; 静态资源部分
+          ("org-static"
+           :base-directory "~/org/"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|mov"
+           :publishing-directory "~/public_html/"
+           :recursive t
+           :publishing-function org-publish-attachment)
+
+          ;; 项目集合
+          ("org"
+           :components ("org-notes" "org-static"))
+          ))
+  )
+
+(use-package ox-hugo
+  :ensure t
+  :config
+  (with-eval-after-load 'org-capture
+    (defun org-hugo-new-subtree-post-capture-template ()
+      "Returns `org-capture' template string for new Hugo post.
+See `org-capture-templates' for more information."
+      (let* ((title (read-from-minibuffer "Post Title: ")) ; Prompt to enter the post title
+             (fname (org-hugo-slug title)))
+        (mapconcat #'identity
+                   `(
+                     ,(concat "* TODO " title)
+                     ":PROPERTIES:"
+                     ,(concat ":EXPORT_FILE_NAME: " fname)
+                     ":END:"
+                     "%?\n")          ; Place the cursor here finally
+                   "\n")))
+
+    (add-to-list 'org-capture-templates
+                 '("h"                ; `org-capture' binding + h
+                   "Hugo post"
+                   entry
+                   ;; It is assumed that below file is present in `org-directory'
+                   ;; and that it has a "Blog Ideas" heading. It can even be a
+                   ;; symlink pointing to the actual location of capture.org!
+                   (file+olp "capture.org" "Notes")
+                   (function org-hugo-new-subtree-post-capture-template))))
+  )
+
 (provide 'init-org)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-org.el ends here
