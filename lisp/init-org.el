@@ -265,7 +265,7 @@ Optional for Org-mode file: `LINK'."
 				   ("apple"    . ?a)
 				   ("noexport" . ?n)
 				   ("ignore"   . ?i)
-				   ("TOC"      . ?t)
+				   ("toc"      . ?t)
 				   (:endgroup)))
 
   ;; 归档设置
@@ -966,6 +966,67 @@ See `org-capture-templates' for more information."
                    (file+olp "capture.org" "Notes")
                    (function org-hugo-new-subtree-post-capture-template))))
   )
+
+(use-package emacs
+  :ensure nil
+  :after org
+  :bind (:map org-mode-map
+              ("s-V" . my/org-insert-clipboard-image))
+  :config
+  (defun my/org-insert-clipboard-image (width)
+    "create a time stamped unique-named file from the clipboard in the sub-directory
+ (%filename.assets) as the org-buffer and insert a link to this file."
+    (interactive (list
+                  (read-string (format "Input image width, default is 800: ")
+                               nil nil "800")))
+    ;; 设置图片存放的文件夹位置为 `当前Org文件同名.assets'
+    (setq foldername (concat (file-name-base (buffer-file-name)) ".assets/"))
+    (if (not (file-exists-p foldername))
+        (mkdir foldername))
+    ;; 设置图片的文件名，格式为 `img_年月日_时分秒.png'
+    (setq imgName (concat "img_" (format-time-string "%Y%m%d_%H%M%S") ".png"))
+    ;; 图片文件的相对路径
+    (setq relativeFilename (concat (file-name-base (buffer-name)) ".assets/" imgName))
+    ;; 根据不同的操作系统设置不同的命令行工具
+    (cond ((string-equal system-type "gnu/linux")
+           (shell-command (concat "xclip -selection clipboard -t image/png -o > " relativeFilename)))
+          ((string-equal system-type "darwin")
+           (shell-command (concat "pngpaste " relativeFilename))))
+    ;; 给粘贴好的图片链接加上宽度属性，方便导出
+    (insert (concat "\n#+DOWNLOADED: screenshot @ "
+                    (format-time-string "%Y-%m-%d %a %H:%M:%S" (current-time))
+                    "\n#+CAPTION: \n#+ATTR_ORG: :width "
+                    width
+                    "\n#+ATTR_LATEX: :width "
+                    (if (>= (/ (string-to-number width) 800.0) 1.0)
+                        "1.0"
+                      (number-to-string (/ (string-to-number width) 800.0)))
+                    "\\linewidth :float nil\n"
+                    "#+ATTR_HTML: :width "
+                    width
+                    "\n[[file:" relativeFilename "]]\n"))
+    ;; 重新显示一下图片
+    (org-redisplay-inline-images)
+    )
+  )
+
+(use-package toc-org
+  :ensure t
+  :hook (org-mode . toc-org-mode))
+
+(use-package ol
+  :ensure nil
+  :defer t
+  :custom
+  (org-link-keep-stored-after-insertion t)
+  (org-link-abbrev-alist '(("github"        . "https://github.com/")
+                           ("gitlab"        . "https://gitlab.com/")
+                           ("google"        . "https://google.com/search?q=")
+                           ("baidu"         . "https://baidu.com/s?wd=")
+                           ("rfc"           . "https://tools.ietf.org/html/")
+                           ("wiki"          . "https://en.wikipedia.org/wiki/")
+                           ("youtube"       . "https://youtube.com/watch?v=")
+                           ("zhihu"         . "https://zhihu.com/question/"))))
 
 (provide 'init-org)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

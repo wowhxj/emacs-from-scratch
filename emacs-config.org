@@ -7,6 +7,90 @@
 #+SETUPFILE: ~/.emacs.d.default/org-setupfile.org
 #+OPTIONS: author:nil date:nil email:nil timestamp:nil num:t
 
+* 目录                                                                  :toc:
+- [[#early-initel][early-init.el]]
+- [[#initel][init.el]]
+  - [[#initel-文件头][init.el 文件头]]
+  - [[#package包管理配置][package包管理配置]]
+  - [[#安装use-package插件][安装use-package插件]]
+  - [[#quelpa包管理器][quelpa包管理器]]
+  - [[#加载模块化配置][加载模块化配置]]
+  - [[#initel-文件尾][init.el 文件尾]]
+- [[#init-uiel][init-ui.el]]
+  - [[#init-uiel-文件头][init-ui.el 文件头]]
+  - [[#ef主题][ef主题]]
+  - [[#字体设置][字体设置]]
+  - [[#窗口设置][窗口设置]]
+  - [[#其他ui零散设置项][其他UI零散设置项]]
+  - [[#编码设置][编码设置]]
+  - [[#模式栏设置][模式栏设置]]
+  - [[#init-uiel-文件尾][init-ui.el 文件尾]]
+- [[#init-baseel][init-base.el]]
+  - [[#init-baseel-文件头][init-base.el 文件头]]
+  - [[#no-littering让配置目录简洁][no-littering让配置目录简洁]]
+  - [[#savehist记住迷你缓冲区历史][savehist记住迷你缓冲区历史]]
+  - [[#saveplace记住每个文件的光标位置][saveplace记住每个文件的光标位置]]
+  - [[#recentf最近打开的文件历史][recentf最近打开的文件历史]]
+  - [[#undo-tree撤销设置][undo-tree撤销设置]]
+  - [[#super-save自动保存][super-save自动保存]]
+  - [[#crux系统增强][crux系统增强]]
+  - [[#个人函数定义][个人函数定义]]
+  - [[#init-baseel-文件尾][init-base.el 文件尾]]
+- [[#init-editel][init-edit.el]]
+  - [[#init-editel-文件头][init-edit.el 文件头]]
+  - [[#emacs备份设置][Emacs备份设置]]
+  - [[#解除一些不常用的快捷键][解除一些不常用的快捷键]]
+  - [[#delsel选择文本输入时直接替换][delsel选择文本输入时直接替换]]
+  - [[#自动重载设置][自动重载设置]]
+  - [[#avy光标移动][avy光标移动]]
+  - [[#multiple-cursors多光标编辑][multiple-cursors多光标编辑]]
+  - [[#init-editel-文件尾][init-edit.el 文件尾]]
+- [[#init-orgel][init-org.el]]
+  - [[#init-orgel-文件头][init-org.el 文件头]]
+  - [[#org-mode基本配置][Org mode基本配置]]
+  - [[#org-modern-美化][org-modern 美化]]
+  - [[#org-appear自动展开强调链接][org-appear自动展开强调链接]]
+  - [[#org-auto-tangle自动tangle设置][org-auto-tangle自动tangle设置]]
+  - [[#org-capture快速记录设置][org-capture快速记录设置]]
+  - [[#denote笔记设置][denote笔记设置]]
+  - [[#consult-notes查找笔记][consult-notes查找笔记]]
+  - [[#org-super-links反链设置][org-super-links反链设置]]
+  - [[#org-src代码块基础配置][org-src代码块基础配置]]
+  - [[#org-babel代码块后端][org babel代码块后端]]
+  - [[#限制代码块结果长度][限制代码块结果长度]]
+  - [[#ox文件导出通用设置][ox文件导出通用设置]]
+  - [[#org导出后端设置][org导出后端设置]]
+  - [[#图片粘贴][图片粘贴]]
+  - [[#toc-org目录自动生成][toc-org目录自动生成]]
+  - [[#ol新增链接类型][ol新增链接类型]]
+  - [[#init-orgel-文件尾][init-org.el 文件尾]]
+- [[#init-completionel][init-completion.el]]
+  - [[#init-completionel-文件头][init-completion.el 文件头]]
+  - [[#vertico][vertico]]
+  - [[#orderless][orderless]]
+  - [[#marginalia][marginalia]]
+  - [[#consult][consult]]
+  - [[#corfu][corfu]]
+  - [[#yasnippet模板补全][yasnippet模板补全]]
+  - [[#init-completionel-文件尾][init-completion.el 文件尾]]
+- [[#init-toolsel][init-tools.el]]
+  - [[#init-toolsel-文件头][init-tools.el 文件头]]
+  - [[#helpful帮助增强][helpful帮助增强]]
+  - [[#which-key快捷键][which-key快捷键]]
+  - [[#init-toolsel-文件尾][init-tools.el 文件尾]]
+- [[#init-devel][init-dev.el]]
+  - [[#init-devel-文件头][init-dev.el 文件头]]
+  - [[#vc设置][vc设置]]
+  - [[#magit版本管理][magit版本管理]]
+  - [[#diff-hl高亮显示修改的部分][diff-hl高亮显示修改的部分]]
+  - [[#magit-delta增强git-diff][magit-delta增强git diff]]
+  - [[#paren高亮匹配的括号][paren高亮匹配的括号]]
+  - [[#rainbow-delimeters多彩括号][rainbow-delimeters多彩括号]]
+  - [[#emacs-lisp语言设置][emacs-lisp语言设置]]
+  - [[#python语言设置][Python语言设置]]
+  - [[#shell语言设置][Shell语言设置]]
+  - [[#init-devel-文件尾][init-dev.el 文件尾]]
+
 * early-init.el
 :PROPERTIES:
 :HEADER-ARGS: :tangle early-init.el
@@ -1251,7 +1335,7 @@ Optional for Org-mode file: `LINK'."
 				   ("apple"    . ?a)
 				   ("noexport" . ?n)
 				   ("ignore"   . ?i)
-				   ("TOC"      . ?t)
+				   ("toc"      . ?t)
 				   (:endgroup)))
 
   ;; 归档设置
@@ -2081,6 +2165,85 @@ See `org-capture-templates' for more information."
   )
 #+END_SRC
 
+** 图片粘贴
+
+通过 =pngpaste= 这个命令行工具，将系统剪贴板里的图片，输出到当前文件同名的 =assets= 文件夹下，然后自动在当前org文件的光标处插入图片链接，并设置图片链接的宽度属性。
+
+#+BEGIN_SRC emacs-lisp
+(use-package emacs
+  :ensure nil
+  :after org
+  :bind (:map org-mode-map
+              ("s-V" . my/org-insert-clipboard-image))
+  :config
+  (defun my/org-insert-clipboard-image (width)
+    "create a time stamped unique-named file from the clipboard in the sub-directory
+ (%filename.assets) as the org-buffer and insert a link to this file."
+    (interactive (list
+                  (read-string (format "Input image width, default is 800: ")
+                               nil nil "800")))
+    ;; 设置图片存放的文件夹位置为 `当前Org文件同名.assets'
+    (setq foldername (concat (file-name-base (buffer-file-name)) ".assets/"))
+    (if (not (file-exists-p foldername))
+        (mkdir foldername))
+    ;; 设置图片的文件名，格式为 `img_年月日_时分秒.png'
+    (setq imgName (concat "img_" (format-time-string "%Y%m%d_%H%M%S") ".png"))
+    ;; 图片文件的相对路径
+    (setq relativeFilename (concat (file-name-base (buffer-name)) ".assets/" imgName))
+    ;; 根据不同的操作系统设置不同的命令行工具
+    (cond ((string-equal system-type "gnu/linux")
+           (shell-command (concat "xclip -selection clipboard -t image/png -o > " relativeFilename)))
+          ((string-equal system-type "darwin")
+           (shell-command (concat "pngpaste " relativeFilename))))
+    ;; 给粘贴好的图片链接加上宽度属性，方便导出
+    (insert (concat "\n#+DOWNLOADED: screenshot @ "
+                    (format-time-string "%Y-%m-%d %a %H:%M:%S" (current-time))
+                    "\n#+CAPTION: \n#+ATTR_ORG: :width "
+                    width
+                    "\n#+ATTR_LATEX: :width "
+                    (if (>= (/ (string-to-number width) 800.0) 1.0)
+                        "1.0"
+                      (number-to-string (/ (string-to-number width) 800.0)))
+                    "\\linewidth :float nil\n"
+                    "#+ATTR_HTML: :width "
+                    width
+                    "\n[[file:" relativeFilename "]]\n"))
+    ;; 重新显示一下图片
+    (org-redisplay-inline-images)
+    )
+  )
+#+END_SRC
+
+** toc-org目录自动生成
+
+[[https://github.com/snosov1/toc-org][toc-org]] 插件可以在Org文件里自动生成目录，只需给一个标题行设置一个标签为 =toc= 或 =toc_2= 即可（后者只生成2层）。
+
+#+BEGIN_SRC emacs-lisp
+(use-package toc-org
+  :ensure t
+  :hook (org-mode . toc-org-mode))
+#+END_SRC
+
+** ol新增链接类型
+
+[[google:Org mode][google Org mode]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package ol
+  :ensure nil
+  :defer t
+  :custom
+  (org-link-keep-stored-after-insertion t)
+  (org-link-abbrev-alist '(("github"        . "https://github.com/")
+                           ("gitlab"        . "https://gitlab.com/")
+                           ("google"        . "https://google.com/search?q=")
+                           ("baidu"         . "https://baidu.com/s?wd=")
+                           ("rfc"           . "https://tools.ietf.org/html/")
+                           ("wiki"          . "https://en.wikipedia.org/wiki/")
+                           ("youtube"       . "https://youtube.com/watch?v=")
+                           ("zhihu"         . "https://zhihu.com/question/"))))
+#+END_SRC
+
 ** init-org.el 文件尾
 
 #+BEGIN_SRC emacs-lisp
@@ -2323,8 +2486,7 @@ For locate on MacOS:
       (eshell-send-input))
      ((and (derived-mode-p 'comint-mode)  (fboundp 'comint-send-input))
       (comint-send-input))))
-
-  (advice-add #'corfu-insert :after #'corfu-send-shell)
+  ;; (advice-add #'corfu-insert :after #'corfu-send-shell)
 
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
