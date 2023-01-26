@@ -333,6 +333,26 @@
   (setq keycast-log-newest-first t)
   )
 
+(use-package notifications
+  :ensure nil
+  :commands notify-send
+  :config
+  (cond ((eq system-type 'darwin)
+         (defun notify-send (&rest params)
+           "Send notifications via `terminal-notifier'."
+           (let ((title (plist-get params :title))
+                 (body (plist-get params :body)))
+             (start-process "terminal-notifier"
+                            nil
+                            "terminal-notifier"
+                            "-group" "Emacs"
+                            "-title" title
+                            "-message" body
+                            "-activate" "org.gnu.Emacs"))))
+        (t
+         (defalias 'notify-send 'notifications-notify)))
+  )
+
 (provide 'init-ui)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-ui.el ends here
