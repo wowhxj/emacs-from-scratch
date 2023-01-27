@@ -353,6 +353,12 @@
          (defalias 'notify-send 'notifications-notify)))
   )
 
+(use-package all-the-icons
+  :ensure t
+  :when (display-graphic-p)
+  :commands all-the-icons-install-fonts
+  )
+
 (provide 'init-ui)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-ui.el ends here

@@ -231,6 +231,60 @@
                  (eq old-tick (buffer-chars-modified-tick)))
         (ignore-errors (yas-next-field))))))
 
+(use-package all-the-icons-completion
+  :ensure t
+  :hook ((after-init . all-the-icons-completion-mode)
+         (marginalia-mode . all-the-icons-completion-marginalia-setup))
+  )
+
+(use-package embark
+  :ensure t
+  :bind (([remap describe-bindings] . embark-bindings)
+         ("C-'" . embark-act)
+         :map minibuffer-local-map
+         :map minibuffer-local-completion-map
+         ("TAB" . minibuffer-force-complete)
+         :map embark-file-map
+         ("E" . consult-file-externally)      ; Open file externally, or `we' in Ranger
+         ("O" . consult-directory-externally) ; Open directory externally
+         )
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  ;; Show Embark actions via which-key
+  (setq embark-action-indicator
+        (lambda (map)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator)
+
+  ;; open directory
+  (defun consult-directory-externally (file)
+    "Open directory externally using the default application of the system."
+    (interactive "fOpen externally: ")
+    (if (and (eq system-type 'windows-nt)
+             (fboundp 'w32-shell-execute))
+        (shell-command-to-string (encode-coding-string (replace-regexp-in-string "/" "\\\\"
+                                                                                 (format "explorer.exe %s" (file-name-directory (expand-file-name file)))) 'gbk))
+      (call-process (pcase system-type
+    	              ('darwin "open")
+    	              ('cygwin "cygstart")
+    	              (_ "xdg-open"))
+    	            nil 0 nil
+    	            (file-name-directory (expand-file-name file)))))
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none))))
+  )
+
+(use-package embark-consult
+  :ensure t
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
 (provide 'init-completion)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-completion.el ends here
