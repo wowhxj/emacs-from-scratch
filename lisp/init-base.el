@@ -115,6 +115,12 @@
   (set dst
        (append (eval dst) src)))
 
+;; 打开当前配置Org文件
+(defun open-emacsconfig ()
+  "Opens emacs config org file."
+  (interactive)
+  (find-file (locate-user-emacs-file "emacs-config.org")))
+
 (provide 'init-base)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-base.el ends here
