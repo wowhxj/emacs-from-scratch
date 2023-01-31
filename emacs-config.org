@@ -37,6 +37,7 @@
   - [[#super-save自动保存][super-save自动保存]]
   - [[#crux系统增强][crux系统增强]]
   - [[#个人函数定义][个人函数定义]]
+  - [[#别名定义][别名定义]]
   - [[#init-baseel-文件尾][init-base.el 文件尾]]
 - [[#init-editel][init-edit.el]]
   - [[#init-editel-文件头][init-edit.el 文件头]]
@@ -108,6 +109,11 @@
   - [[#邮件发送配置][邮件发送配置]]
   - [[#邮件系统通知][邮件系统通知]]
   - [[#init-mailel-文件尾][init-mail.el 文件尾]]
+- [[#init-rssel][init-rss.el]]
+  - [[#init-rssel-文件头][init-rss.el 文件头]]
+  - [[#elfeed][elfeed]]
+  - [[#elfeed-goodies给elfeed优化增强][elfeed-goodies给elfeed优化增强]]
+  - [[#init-rssel-文件尾][init-rss.el 文件尾]]
 
 * early-init.el
 :PROPERTIES:
@@ -249,6 +255,7 @@
   (require 'init-tools)                 ; 相关工具
   (require 'init-dev)                   ; 开发相关配置
   (require 'init-mail)                  ; 邮件配置
+  (require 'init-rss)                   ; RSS配置
   )
 #+END_SRC
 
@@ -875,6 +882,16 @@
   "Opens emacs config org file."
   (interactive)
   (find-file (locate-user-emacs-file "emacs-config.org")))
+#+END_SRC
+
+** 别名定义
+
+定义了别名后，可以通过 =M-x 别名= 的方式来调用某个命令。
+
+#+BEGIN_SRC emacs-lisp
+(defalias 'e #'eshell)
+(defalias 's #'scratch)
+(defalias 'conf #'open-emacsconfig)
 #+END_SRC
 
 ** init-base.el 文件尾
@@ -3790,5 +3807,105 @@ notmuch邮件系统配置。
 (provide 'init-mail)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-mail.el ends here
+#+END_SRC
+
+* init-rss.el
+:PROPERTIES:
+:HEADER-ARGS: :tangle lisp/init-rss.el :mkdirp yes
+:END:
+
+Emacs的RSS新闻阅读设置
+
+** init-rss.el 文件头
+#+BEGIN_SRC emacs-lisp
+;;; init-rss.el --- RSS settings -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;; Code:
+
+#+END_SRC
+
+** elfeed
+
+[[https://github.com/skeeto/elfeed][elfeed]] 插件是一个非常棒的RSS新闻阅读客户端。
+
+#+BEGIN_SRC emacs-lisp
+(use-package elfeed
+  :ensure t
+  :hook ((elfeed-new-entry . (lambda () (elfeed-make-tagger :feed-url "video" :add '(video))
+                               (elfeed-make-tagger :entry-title "图卦" :add '(pic)))))
+  :bind (("\e\e n" . elfeed)
+         :map elfeed-search-mode-map
+         ("g" . elfeed-update)
+         ("G" . elfeed-search-update--force)
+         ("o" . elfeed-default-browser-open)
+         :map elfeed-show-mode-map
+         ("M-v" . scroll-down-command)
+         ("j" . scroll-up-line)
+         ("k" . scroll-down-line))
+  :config
+  (setq elfeed-db-directory "~/.elfeed")
+  ;; capture template for elfeed
+  (with-eval-after-load 'org-capture
+    (add-to-list 'org-capture-templates '("r" "Elfeed RSS" entry (file+headline "capture.org" "Elfeed")
+                                          "* %:elfeed-entry-title :READ:\n%?\n%a"
+                                          :empty-lines-after 1
+                                          :prepend t))
+    (add-to-list 'org-capture-templates-contexts '("r" ((in-mode . "elfeed-show-mode")
+                                                        (in-mode . "elfeed-search-mode")))))
+  ;; ================================
+  ;; open entry with browser
+  ;; ================================
+  (defun elfeed-default-browser-open (&optional use-generic-p)
+    "open with default browser"
+    (interactive "P")
+    (let ((entries (elfeed-search-selected)))
+      (cl-loop for entry in entries
+               do (elfeed-untag entry 'unread)
+               when (elfeed-entry-link entry)
+               do (browse-url it))
+      (mapc #'elfeed-search-update-entry entries)
+      (unless (use-region-p) (forward-line))))
+  :custom
+  (elfeed-feeds '(
+                  ("https://planet.emacslife.com/atom.xml" emacs)
+                  ("http://www.dapenti.com/blog/rss2.asp?name=xilei" news)
+                  ("https://remacs.cc/index.xml" emacs product)
+                  ))
+  (elfeed-use-curl t)
+  (elfeed-curl-max-connections 10)
+  (elfeed-enclosure-default-dir "~/Downloads/")
+  (elfeed-search-filter "@4-months-ago +")
+  (elfeed-sort-order 'descending)
+  (elfeed-search-clipboard-type 'CLIPBOARD)
+  (elfeed-search-title-max-width 100)
+  (elfeed-search-title-min-width 30)
+  (elfeed-search-trailing-width 25)
+  (elfeed-show-truncate-long-urls t)
+  (elfeed-show-unique-buffers t)
+  (elfeed-search-date-format '("%F %R" 16 :left))
+  )
+#+END_SRC
+
+** elfeed-goodies给elfeed优化增强
+
+我们通过 [[https://github.com/jeetelongname/elfeed-goodies][elfeed-goodies]] 插件给 elfeed 进行优化增强：
+
+#+BEGIN_SRC emacs-lisp
+(use-package elfeed-goodies
+  :ensure t
+  :hook (after-init . elfeed-goodies/setup)
+  :config
+  ;; set elfeed show entry switch function
+  (setq elfeed-show-entry-switch #'elfeed-goodies/switch-pane) ; switch-to-buffer, pop-to-buffer
+  )
+#+END_SRC
+
+** init-rss.el 文件尾
+#+BEGIN_SRC emacs-lisp
+
+(provide 'init-rss)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init-rss.el ends here
 #+END_SRC
 

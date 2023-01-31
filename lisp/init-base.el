@@ -121,6 +121,10 @@
   (interactive)
   (find-file (locate-user-emacs-file "emacs-config.org")))
 
+(defalias 'e #'eshell)
+(defalias 's #'scratch)
+(defalias 'conf #'open-emacsconfig)
+
 (provide 'init-base)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-base.el ends here
