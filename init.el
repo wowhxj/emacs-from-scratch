@@ -68,6 +68,7 @@
   (require 'init-dev)                   ; 开发相关配置
   (require 'init-mail)                  ; 邮件配置
   (require 'init-rss)                   ; RSS配置
+  (require 'init-shell)                 ; Shell配置
   )
 
 (provide 'init)

@@ -1,0 +1,9 @@
+alias ff find-file $1
+alias fo find-file-other-window $1
+alias d dired $1
+alias ll ls -alh
+alias l. ls -dh .*
+alias up eshell-up $1
+alias pk eshell-up-peek $1
+alias less view-file $1
+alias more view-file $1
