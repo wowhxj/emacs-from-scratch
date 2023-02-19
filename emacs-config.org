@@ -5,7 +5,7 @@
 
 #+STARTUP: overview
 #+SETUPFILE: ~/.emacs.d.default/org-setupfile.org
-#+OPTIONS: author:nil date:nil email:nil timestamp:nil num:t
+#+OPTIONS: author:nil date:nil email:nil timestamp:nil num:nil
 
 * 目录                                                                  :toc:
 - [[#early-initel][early-init.el]]
