@@ -123,7 +123,7 @@
   - [[#有些命令使用-term][有些命令使用 term]]
   - [[#eshell-git-prompt-命令行主题][eshell-git-prompt 命令行主题]]
   - [[#eshell-syntax-highlighting-语法高亮][eshell-syntax-highlighting 语法高亮]]
-  - [[#esh-autosuggest自动补全][esh-autosuggest自动补全]]
+  - [[#capf-autosuggest自动补全][capf-autosuggest自动补全]]
   - [[#eshell-up快速进入父级文件夹][eshell-up快速进入父级文件夹]]
   - [[#init-shellel-文件尾][init-shell.el 文件尾]]
 
@@ -4105,13 +4105,9 @@ alias more view-file $1
   )
 #+END_SRC
 
-** esh-autosuggest自动补全
+** capf-autosuggest自动补全
 
 [[https://github.com/emacsmirror/capf-autosuggest][capf-autosuggest]] 提供Fish类似的Eshell命令自动补全功能。类似的插件还有 [[https://github.com/dieggsy/esh-autosuggest][esh-autosuggest]]。
-
-#+BEGIN_QUOTE
-使用 =C-f= 来补全整句，使用 =M-f= 来补全一个词。
-#+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
 (use-package capf-autosuggest
