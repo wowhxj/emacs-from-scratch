@@ -5,7 +5,7 @@
 
 #+STARTUP: overview
 #+SETUPFILE: ~/.emacs.d.default/org-setupfile.org
-#+OPTIONS: author:nil date:nil email:nil timestamp:nil num:t
+#+OPTIONS: author:nil date:nil email:nil timestamp:nil num:nil
 
 * 目录                                                                  :toc:
 - [[#early-initel][early-init.el]]
@@ -4107,22 +4107,22 @@ alias more view-file $1
 
 ** esh-autosuggest自动补全
 
-[[https://github.com/dieggsy/esh-autosuggest][esh-autosuggest]] 提供Fish类似的Eshell命令自动补全功能。类似的插件还有 [[https://github.com/emacsmirror/capf-autosuggest][capf-autosuggest]]。
+[[https://github.com/emacsmirror/capf-autosuggest][capf-autosuggest]] 提供Fish类似的Eshell命令自动补全功能。类似的插件还有 [[https://github.com/dieggsy/esh-autosuggest][esh-autosuggest]]。
 
 #+BEGIN_QUOTE
 使用 =C-f= 来补全整句，使用 =M-f= 来补全一个词。
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
-(use-package esh-autosuggest
+(use-package capf-autosuggest
   :ensure t
-  :hook (eshell-mode . esh-autosuggest-mode)
+  :hook ((eshell-mode comint-mod) . capf-autosuggest-mode)
   )
 #+END_SRC
 
 ** eshell-up快速进入父级文件夹
 
-[[https://github.com/peterwvj/eshell-up][eshell-up]] 插件可以快速进入当前文件夹的任何一个父级文件夹。通过 =up= 命令（已经设置了alias）进入当前文件夹的任何一级父目录。
+[[https://github.com/peterwvj/eshell-up][eshell-up]] 插件可以快速进入当前文件夹的任何一个父级文件夹。通过 =up= 命令（已经设置了up 在eshell里的alias）进入当前文件夹的任何一级父目录。
 
 #+BEGIN_SRC emacs-lisp
 (use-package eshell-up

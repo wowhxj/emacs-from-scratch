@@ -124,9 +124,9 @@ current directory."
   (eshell-syntax-highlighting-shell-command-face ((t (:foreground "#7cc77f" :bold t))))
   )
 
-(use-package esh-autosuggest
+(use-package capf-autosuggest
   :ensure t
-  :hook (eshell-mode . esh-autosuggest-mode)
+  :hook ((eshell-mode comint-mod) . capf-autosuggest-mode)
   )
 
 (use-package eshell-up
