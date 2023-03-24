@@ -1,4 +1,4 @@
-;;; init-shell.el --- (E)shell settings -*- lexical-binding: t -*-
+﻿;;; init-shell.el --- (E)shell settings -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;;; Code:
@@ -126,7 +126,9 @@ current directory."
 
 (use-package capf-autosuggest
   :ensure t
-  :hook ((eshell-mode comint-mod) . capf-autosuggest-mode)
+  :hook ((eshell-mode comint-mode) . capf-autosuggest-mode)
+  :custom-face
+  (capf-autosuggest-face ((t (:foreground "#dae7ff"))))
   )
 
 (use-package eshell-up
