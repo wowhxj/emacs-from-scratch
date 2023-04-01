@@ -74,3 +74,22 @@
 (provide 'init)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(connection-local-criteria-alist
+   '(((:application eshell)
+      eshell-connection-default-profile)))
+ '(connection-local-profile-alist
+   '((eshell-connection-default-profile
+      (eshell-path-env-list))))
+ '(package-selected-packages
+   '(popper shackle plantuml-mode multiple-cursors super-save eshell-up cal-china-x gnuplot ox-gfm elfeed-goodies crux keycast fanyi yasnippet capf-autosuggest diminish denote ox-reveal dirvish no-littering quelpa-use-package magit-delta eshell-git-prompt orderless org-appear embark-consult ox-hugo marginalia py-autopep8 org-modern all-the-icons-completion which-key fontaine sdcv ef-themes doom-modeline undo-tree org-contrib all-the-icons-dired ox-pandoc toc-org corfu esh-autosuggest diredfl org-super-links htmlize consult-notes helpful rainbow-delimiters diff-hl org-auto-tangle minions pinyinlib eshell-syntax-highlighting cape ol-notmuch vertico)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

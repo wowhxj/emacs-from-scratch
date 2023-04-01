@@ -121,6 +121,14 @@
   (interactive)
   (find-file (locate-user-emacs-file "emacs-config.org")))
 
+;; 从剪贴板获取内容
+(defun clipboard/get ()
+  "return the content of clipboard as string"
+  (interactive)
+  (with-temp-buffer
+    (clipboard-yank)
+    (buffer-substring-no-properties (point-min) (point-max))))
+
 (defalias 'e #'eshell)
 (defalias 's #'scratch)
 (defalias 'conf #'open-emacsconfig)
