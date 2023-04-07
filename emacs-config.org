@@ -95,6 +95,7 @@
   - [[#which-key快捷键][which-key快捷键]]
   - [[#sdcv本地词典][sdcv本地词典]]
   - [[#fanyi在线词典][fanyi在线词典]]
+  - [[#org-ai智能助手][org-ai智能助手]]
   - [[#init-toolsel-文件尾][init-tools.el 文件尾]]
 - [[#init-devel][init-dev.el]]
   - [[#init-devel-文件头][init-dev.el 文件头]]
@@ -3566,6 +3567,25 @@ Version 2019-11-04"
                      ;; ;; LibreTranslate
                      ;; fanyi-libre-provider
                      )))
+#+END_SRC
+
+** org-ai智能助手
+
+[[https://github.com/rksm/org-ai][org-ai]] 插件可以访问 ChatGPT 并成为 Emacs 的智能助手。
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-ai
+  :ensure t
+  :bind (
+         ("C-c q" . org-ai-prompt)
+         ("C-c x" . org-ai-on-region)
+         )
+  :hook (org-mode . org-ai-mode)
+  :config
+  ;; (setq org-ai-openai-api-token "Your Key") ; 以明文的方式存储key，或者放入到 ~/.authinfo.gpg 文件里
+  (setq org-ai-default-max-tokens 480)
+  (setq org-ai-default-chat-system-prompt "你是一个Emacs助手，请以Org-mode的格式来回复我")
+  )
 #+END_SRC
 
 ** init-tools.el 文件尾

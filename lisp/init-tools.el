@@ -92,6 +92,19 @@
                      ;; fanyi-libre-provider
                      )))
 
+(use-package org-ai
+  :ensure t
+  :bind (
+         ("C-c q" . org-ai-prompt)
+         ("C-c x" . org-ai-on-region)
+         )
+  :hook (org-mode . org-ai-mode)
+  :config
+  ;; (setq org-ai-openai-api-token "Your Key") ; 以明文的方式存储key，或者放入到 ~/.authinfo.gpg 文件里
+  (setq org-ai-default-max-tokens 480)
+  (setq org-ai-default-chat-system-prompt "你是一个Emacs助手，请以Org-mode的格式来回复我")
+  )
+
 (provide 'init-tools)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-tools.el ends here

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: dall-e
+# key: <da
+# --
+#+begin_ai :image :size 256x256
+$0
+#+end_ai

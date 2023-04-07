@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: orgai
+# key: <ai
+# --
+#+begin_ai :max-tokens 2000 :temperature 1 :sys-everywhere nil
+[SYS]: ${1:你是一个Emacs助手，请以Org-mode的格式来回复}
+
+[ME]: $0
+#+end_ai
