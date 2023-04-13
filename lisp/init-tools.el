@@ -1,4 +1,4 @@
-;;; init-tools.el --- Tools settings -*- lexical-binding: t -*-
+﻿;;; init-tools.el --- Tools settings -*- lexical-binding: t -*-
 ;;; Commentary: Useful tools to make Emacs efficient!
 
 ;;; Code:
@@ -103,6 +103,11 @@
   ;; (setq org-ai-openai-api-token "Your Key") ; 以明文的方式存储key，或者放入到 ~/.authinfo.gpg 文件里
   (setq org-ai-default-max-tokens 480)
   (setq org-ai-default-chat-system-prompt "你是一个Emacs助手，请以Org-mode的格式来回复我")
+  )
+
+(use-package pass
+  :ensure t
+  :commands (pass)
   )
 
 (provide 'init-tools)

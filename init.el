@@ -1,4 +1,4 @@
-;;; init.el --- The main init entry for Emacs -*- lexical-binding: t -*-
+﻿;;; init.el --- The main init entry for Emacs -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;;; Code:
@@ -82,7 +82,7 @@
  '(connection-local-criteria-alist
    '(((:application tramp :machine "localhost")
       tramp-connection-local-darwin-ps-profile)
-     ((:application tramp :machine "Randolphs-MacBook-Pro-13.local")
+     ((:application tramp :machine "huangxj73-Mac369.local")
       tramp-connection-local-darwin-ps-profile)
      ((:application tramp)
       tramp-connection-local-default-system-profile tramp-connection-local-default-shell-profile)
@@ -164,7 +164,7 @@
      (eshell-connection-default-profile
       (eshell-path-env-list))))
  '(package-selected-packages
-   '(org-ai popper shackle plantuml-mode multiple-cursors super-save eshell-up cal-china-x gnuplot ox-gfm elfeed-goodies crux keycast fanyi yasnippet capf-autosuggest diminish denote ox-reveal dirvish no-littering quelpa-use-package magit-delta eshell-git-prompt orderless org-appear embark-consult ox-hugo marginalia py-autopep8 org-modern all-the-icons-completion which-key fontaine sdcv ef-themes doom-modeline undo-tree org-contrib all-the-icons-dired ox-pandoc toc-org corfu esh-autosuggest diredfl org-super-links htmlize consult-notes helpful rainbow-delimiters diff-hl org-auto-tangle minions pinyinlib eshell-syntax-highlighting cape ol-notmuch vertico)))
+   '(pass plantuml-mode super-save eshell-up org-modern cal-china-x gnuplot ox-gfm elfeed-goodies crux keycast yasnippet capf-autosuggest embark-consult denote ox-reveal dirvish no-littering quelpa-use-package magit-delta eshell-git-prompt org-appear py-autopep8 diminish cape org-super-links ox-hugo shackle all-the-icons-completion which-key fontaine ef-themes undo-tree org-contrib all-the-icons-dired ox-pandoc doom-modeline toc-org corfu diredfl marginalia orderless htmlize consult-notes helpful rainbow-delimiters multiple-cursors popper diff-hl org-auto-tangle minions pinyinlib eshell-syntax-highlighting ol-notmuch vertico use-package-ensure-system-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
