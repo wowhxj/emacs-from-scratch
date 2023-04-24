@@ -110,6 +110,25 @@
   :commands (pass)
   )
 
+(use-package nov
+  :ensure t
+  :mode ("\\.epub\\'" . nov-mode)
+  :bind (:map nov-mode-map
+              ("j" . scroll-up-line)
+              ("k" . scroll-down-line))
+  )
+
+(use-package calibredb
+  :ensure t
+  :commands calibredb
+  :bind ("\e\e b" . calibredb)
+  :config
+  (setq calibredb-root-dir "~/Calibre")
+  (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+  (setq calibredb-library-alist '(("~/Books/books")
+                                  ))
+  )
+
 (provide 'init-tools)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-tools.el ends here

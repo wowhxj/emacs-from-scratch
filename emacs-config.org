@@ -97,6 +97,8 @@
   - [[#fanyi在线词典][fanyi在线词典]]
   - [[#org-ai智能助手][org-ai智能助手]]
   - [[#pass密码管理][pass密码管理]]
+  - [[#nov-epub阅读器][nov epub阅读器]]
+  - [[#calibredbel图书管理][calibredb.el图书管理]]
   - [[#init-toolsel-文件尾][init-tools.el 文件尾]]
 - [[#init-devel][init-dev.el]]
   - [[#init-devel-文件头][init-dev.el 文件头]]
@@ -3597,6 +3599,37 @@ Version 2019-11-04"
 (use-package pass
   :ensure t
   :commands (pass)
+  )
+#+END_SRC
+
+** nov epub阅读器
+
+通过 [[https://depp.brause.cc/nov.el/][nov]] 对 =epub= 进行阅读。
+
+#+BEGIN_SRC emacs-lisp
+(use-package nov
+  :ensure t
+  :mode ("\\.epub\\'" . nov-mode)
+  :bind (:map nov-mode-map
+              ("j" . scroll-up-line)
+              ("k" . scroll-down-line))
+  )
+#+END_SRC
+
+** calibredb.el图书管理
+
+通过 [[https://github.com/chenyanming/calibredb.el][calibredb.el]] 来进行图书管理。
+
+#+BEGIN_SRC emacs-lisp
+(use-package calibredb
+  :ensure t
+  :commands calibredb
+  :bind ("\e\e b" . calibredb)
+  :config
+  (setq calibredb-root-dir "~/Calibre")
+  (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+  (setq calibredb-library-alist '(("~/Books/books")
+                                  ))
   )
 #+END_SRC
 
