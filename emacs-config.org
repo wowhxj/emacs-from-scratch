@@ -2926,84 +2926,84 @@ For locate on MacOS:
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
-  (use-package consult
-    :ensure t
-    :after org
-    :bind (([remap goto-line]                     . consult-goto-line)
-           ([remap isearch-forward]               . consult-line-symbol-at-point) ; my-consult-ripgrep-or-line
-           ([remap switch-to-buffer]              . consult-buffer)
-           ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
-           ([remap switch-to-buffer-other-frame]  . consult-buffer-other-frame)
-           ([remap yank-pop]                      . consult-yank-pop)
-           ([remap apropos]                       . consult-apropos)
-           ([remap bookmark-jump]                 . consult-bookmark)
-           ([remap goto-line]                     . consult-goto-line)
-           ([remap imenu]                         . consult-imenu)
-           ([remap multi-occur]                   . consult-multi-occur)
-           ([remap recentf-open-files]            . consult-recent-file)
-           ("C-x j"                               . consult-mark)
-           ("C-c g"                               . consult-ripgrep)
-           ("C-c f"                               . consult-find)
-           ("\e\ef"                               . consult-locate) ; need to enable locate first
-           ("C-c n h"                             . my/consult-find-org-headings)
-           :map org-mode-map
-           ("C-c C-j"                             . consult-org-heading)
-           :map minibuffer-local-map
-           ("C-r"                                 . consult-history)
-           :map isearch-mode-map
-           ("C-;"                                 . consult-line)
-           :map prog-mode-map
-           ("C-c C-j"                             . consult-outline)
-           )
-    :hook (completion-list-mode . consult-preview-at-point-mode)
-    :init
-    ;; Optionally configure the register formatting. This improves the register
-    ;; preview for `consult-register', `consult-register-load',
-    ;; `consult-register-store' and the Emacs built-ins.
-    (setq register-preview-delay 0
-          register-preview-function #'consult-register-format)
+(use-package consult
+  :ensure t
+  :after org
+  :bind (([remap goto-line]                     . consult-goto-line)
+         ([remap isearch-forward]               . consult-line-symbol-at-point) ; my-consult-ripgrep-or-line
+         ([remap switch-to-buffer]              . consult-buffer)
+         ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
+         ([remap switch-to-buffer-other-frame]  . consult-buffer-other-frame)
+         ([remap yank-pop]                      . consult-yank-pop)
+         ([remap apropos]                       . consult-apropos)
+         ([remap bookmark-jump]                 . consult-bookmark)
+         ([remap goto-line]                     . consult-goto-line)
+         ([remap imenu]                         . consult-imenu)
+         ([remap multi-occur]                   . consult-multi-occur)
+         ([remap recentf-open-files]            . consult-recent-file)
+         ("C-x j"                               . consult-mark)
+         ("C-c g"                               . consult-ripgrep)
+         ("C-c f"                               . consult-find)
+         ("\e\ef"                               . consult-locate) ; need to enable locate first
+         ("C-c n h"                             . my/consult-find-org-headings)
+         :map org-mode-map
+         ("C-c C-j"                             . consult-org-heading)
+         :map minibuffer-local-map
+         ("C-r"                                 . consult-history)
+         :map isearch-mode-map
+         ("C-;"                                 . consult-line)
+         :map prog-mode-map
+         ("C-c C-j"                             . consult-outline)
+         )
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0
+        register-preview-function #'consult-register-format)
 
-    ;; Optionally tweak the register preview window.
-    ;; This adds thin lines, sorting and hides the mode line of the window.
-    (advice-add #'register-preview :override #'consult-register-window)
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
 
-    ;; Use Consult to select xref locations with preview
-    (setq xref-show-xrefs-function #'consult-xref
-          xref-show-definitions-function #'consult-xref)
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
 
-    ;; MacOS locate doesn't support `--ignore-case --existing' args.
-    (setq consult-locate-args (pcase system-type
-                                ('gnu/linux "locate --ignore-case --existing --regex")
-                                ('darwin "mdfind -name")))
-    :config
-    (consult-customize
-     consult-theme
-     :preview-key '(:debounce 0.2 any)
-     consult-ripgrep consult-git-grep consult-grep
-     consult-bookmark consult-recent-file consult-xref
-     consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
-     :preview-key (kbd "M-."))
+  ;; MacOS locate doesn't support `--ignore-case --existing' args.
+  (setq consult-locate-args (pcase system-type
+                              ('gnu/linux "locate --ignore-case --existing --regex")
+                              ('darwin "mdfind -name")))
+  :config
+  (consult-customize
+   consult-theme
+   :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+   :preview-key '(:debounce 0.4 any))
 
-    ;; Optionally configure the narrowing key.
-    ;; Both < and C-+ work reasonably well.
-    (setq consult-narrow-key "<") ;; (kbd "C-+")
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; (kbd "C-+")
 
-    (autoload 'projectile-project-root "projectile")
-    (setq consult-project-root-function #'projectile-project-root)
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-root-function #'projectile-project-root)
 
-    ;; search all org file headings under a directory, see:
-    ;; https://emacs-china.org/t/org-files-heading-entry/20830/4
-    (defun my/consult-find-org-headings (&optional match)
-      "find headngs in all org files."
-      (interactive)
-      (consult-org-heading match (directory-files org-directory t "^[0-9]\\{8\\}.+\\.org$")))
+  ;; search all org file headings under a directory, see:
+  ;; https://emacs-china.org/t/org-files-heading-entry/20830/4
+  (defun my/consult-find-org-headings (&optional match)
+    "find headngs in all org files."
+    (interactive)
+    (consult-org-heading match (directory-files org-directory t "^[0-9]\\{8\\}.+\\.org$")))
 
-    ;; Use `consult-ripgrep' instead of `consult-line' in large buffers
-    (defun consult-line-symbol-at-point ()
-      "Consult line the synbol where the point is"
-      (interactive)
-      (consult-line (thing-at-point 'symbol)))
-    )
+  ;; Use `consult-ripgrep' instead of `consult-line' in large buffers
+  (defun consult-line-symbol-at-point ()
+    "Consult line the synbol where the point is"
+    (interactive)
+    (consult-line (thing-at-point 'symbol)))
+  )
 #+END_SRC
 
 ** corfu
