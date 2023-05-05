@@ -69,6 +69,7 @@
   (require 'init-mail)                  ; 邮件配置
   (require 'init-rss)                   ; RSS配置
   (require 'init-shell)                 ; Shell配置
+  (require 'init-browser)               ; 浏览器配置
   )
 
 (provide 'init)

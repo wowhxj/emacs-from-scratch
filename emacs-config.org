@@ -135,6 +135,11 @@
   - [[#capf-autosuggest自动补全][capf-autosuggest自动补全]]
   - [[#eshell-up快速进入父级文件夹][eshell-up快速进入父级文件夹]]
   - [[#init-shellel-文件尾][init-shell.el 文件尾]]
+- [[#init-browserel][init-browser.el]]
+  - [[#init-browserel-文件头][init-browser.el 文件头]]
+  - [[#eww-配置][EWW 配置]]
+  - [[#eaf-配置][EAF 配置]]
+  - [[#init-browserel-文件尾][init-browser.el 文件尾]]
 
 * early-init.el
 :PROPERTIES:
@@ -278,6 +283,7 @@
   (require 'init-mail)                  ; 邮件配置
   (require 'init-rss)                   ; RSS配置
   (require 'init-shell)                 ; Shell配置
+  (require 'init-browser)               ; 浏览器配置
   )
 #+END_SRC
 
@@ -4385,4 +4391,74 @@ alias more view-file $1
 (provide 'init-shell)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-shell.el ends here
+#+END_SRC
+
+* init-browser.el
+:PROPERTIES:
+:HEADER-ARGS: :tangle lisp/init-browser.el :mkdirp yes
+:END:
+
+** init-browser.el 文件头
+#+BEGIN_SRC emacs-lisp
+;;; init-browser.el --- Browser settings -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;; Code:
+
+#+END_SRC
+
+** EWW 配置
+
+Emacs 内置 EWW 浏览器配置。
+
+#+BEGIN_SRC emacs-lisp
+(use-package shr
+  :ensure nil
+  :defer t
+  :custom
+  (shr-inhibit-images t)                ; 不显示图片
+  (shr-image-animate nil)               ; 不显示 gif
+  )
+
+(use-package eww
+  :ensure nil
+  :commands eww eww-follow-link
+  :hook (eww-mode . visual-line-mode)
+  :bind (("\e\e w" . eww)
+         :map eww-mode-map
+         ("o" . eww-browse-with-external-browser)
+         ("D" . eww-forward-url)
+         ("S" . eww-back-url)
+         ("f" . link-hint-open-link)
+         ("TAB" . shr-next-link)
+         ("<backtab>" . shr-previous-link)
+         ("j" . scroll-up-line)
+         ("k" . scroll-down-line)
+         )
+  :config
+  (setq eww-download-directory (expand-file-name "~/Downloads"))
+  (setq eww-form-checkbox-symbol "☐")
+  (setq eww-form-checkbox-selected-symbol "☑")
+  )
+#+END_SRC
+
+** EAF 配置
+
+[[https://github.com/emacs-eaf/emacs-application-framework][EAF (Emacs Application Framework)]] 配置。
+
+#+BEGIN_SRC emacs-lisp
+(use-package eaf
+  :load-path "~/emacs-application-framework"
+  :config
+  (require 'eaf-browser)                ; 启用浏览器
+  ;; (require 'eaf-pdf-viewer)          ; 启用PDF阅读器
+  )
+#+END_SRC
+
+** init-browser.el 文件尾
+#+BEGIN_SRC emacs-lisp
+
+(provide 'init-browser)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init-browser.el ends here
 #+END_SRC
