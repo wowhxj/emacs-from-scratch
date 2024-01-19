@@ -26,7 +26,7 @@
     (setq minibuffer-prompt-properties
           '(read-only t cursor-intangible t face minibuffer-prompt))
     (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-    
+
     (setq vertico-cycle t)                ; cycle from last to first
     :custom
     (vertico-count 15)                    ; number of candidates to display, default is 10

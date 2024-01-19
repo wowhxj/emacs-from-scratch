@@ -1,4 +1,4 @@
-﻿;;; init-ui.el --- UI settings -*- lexical-binding: t -*-
+;;; init-ui.el --- UI settings -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;;; Code:
@@ -24,7 +24,7 @@
   ;; Load the theme of choice:
   ;; The themes we provide are recorded in the `ef-themes-dark-themes',
   ;; `ef-themes-light-themes'.
-  
+
   ;; 如果你不喜欢随机主题，也可以直接固定选择一个主题，如下：
   ;; (ef-themes-select 'ef-summer)
 
@@ -412,7 +412,7 @@
   :config
   ;; group by project.el, projectile, directory or perspective
   (setq popper-group-function nil)
-  
+
   ;; pop in child frame or not
   (setq popper-display-function #'display-buffer-in-child-frame)
 

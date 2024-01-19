@@ -1,4 +1,4 @@
-﻿;;; init-shell.el --- (E)shell settings -*- lexical-binding: t -*-
+;;; init-shell.el --- (E)shell settings -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;;; Code:
@@ -19,7 +19,7 @@
   (setq-local scroll-margin 0)
   (setq-local truncate-lines t)
   )
-  
+
   ;; 在Emacs里输入vi，直接在buffer里打开文件
   (defalias 'eshell/vi 'find-file)
   (defalias 'eshell/vim 'find-file)

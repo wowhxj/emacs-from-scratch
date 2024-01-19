@@ -1,4 +1,4 @@
-﻿;;; init-browser.el --- Browser settings -*- lexical-binding: t -*-
+;;; init-browser.el --- Browser settings -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;;; Code:
@@ -30,13 +30,6 @@
   (setq eww-download-directory (expand-file-name "~/Downloads"))
   (setq eww-form-checkbox-symbol "☐")
   (setq eww-form-checkbox-selected-symbol "☑")
-  )
-
-(use-package eaf
-  :load-path "~/emacs-application-framework"
-  :config
-  (require 'eaf-browser)                ; 启用浏览器
-  ;; (require 'eaf-pdf-viewer)          ; 启用PDF阅读器
   )
 
 (provide 'init-browser)

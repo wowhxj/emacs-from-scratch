@@ -1,4 +1,4 @@
-﻿;;; init-tools.el --- Tools settings -*- lexical-binding: t -*-
+;;; init-tools.el --- Tools settings -*- lexical-binding: t -*-
 ;;; Commentary: Useful tools to make Emacs efficient!
 
 ;;; Code:
@@ -127,6 +127,45 @@
   (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
   (setq calibredb-library-alist '(("~/Books/books")
                                   ))
+  )
+
+(use-package mpvi
+  :ensure t
+  :commands (mpvi-open mpvi-seek mpvi-insert)
+  :bind (("C-c v o" . mpvi-open)
+         ("C-c v s" . mpvi-seek)
+         :map mpvi-seek-map
+              ("C-i" . my/mpvi-seeking-capture-as-screenshot))
+  :config
+  ;; 如果不设置这个值，会提示ipc的错误需要你update mpv
+  (setq emms-player-mpv-ipc-method 'ipc-server)
+
+  ;; 通过这个函数来对视频截图，我不喜欢使用attach的方式
+  (defun my/mpvi-seeking-capture-as-screenshot ()
+    "Capture current video screenshot and insert as a link."
+    (interactive)
+    (with-current-buffer (window-buffer (minibuffer-selected-window))
+      (unless (derived-mode-p 'org-mode)
+        (user-error "This is not org-mode, should not insert org link")))
+    (with-current-buffer (window-buffer (minibuffer-selected-window))
+      (when (mpvi-parse-link-at-point)
+        (end-of-line) (insert "\n"))
+      (let ((foldername (concat (file-name-base (buffer-file-name)) ".assets/"))
+            (imgName (concat "img_" (format-time-string "%Y%m%d_%H%M%S") ".png")))
+        (if (not (file-exists-p foldername))
+            (mkdir foldername))
+        (let ((imgPath (concat foldername imgName))
+              (relativeFilename (concat (file-name-base (buffer-name)) ".assets/" imgName)))
+          (mpvi-screenshot-current-playing imgPath "video")
+          (insert (concat "#+DOWNLOADED: screenshot @ "
+                          (format-time-string "%Y-%m-%d %a %H:%M:%S" (current-time))
+                          "\n#+CAPTION: \n#+ATTR_ORG: :width 600"
+                          "\n#+ATTR_LATEX: :width 1.0\\linewidth :float nil\n"
+                          "#+ATTR_HTML: :width 600"
+                          " :class zoomImage\n[[file:" relativeFilename "]]"))
+          ))
+      (org-redisplay-inline-images))
+    (throw 'mpvi-seek "Capture and insert done."))
   )
 
 (provide 'init-tools)
