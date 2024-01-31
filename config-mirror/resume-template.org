@@ -1,0 +1,66 @@
+#+TITLE: Randolph的简历
+#+OPTIONS: toc:nil H:10 tex:t author:nil date:nil
+#+STARTUP: hidestars indent
+#+LaTex_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [letterpaper]
+#+LaTeX_HEADER: \usepackage{/Users/randolph/org/template/resume/resume}
+#+LATEX_HEADER: \usepackage[explicit]{titlesec}
+#+LATEX_HEADER: \usepackage[left=0.4in,right=0.5in,top=0.5in,bottom=0.5in]{geometry}
+#+LATEX_HEADER: \pagenumbering{gobble} % remove page number
+#+LaTeX_HEADER: \usepackage{tabularx}
+#+LaTeX_HEADER: \hypersetup{colorlinks=true, urlcolor={url-blue}}
+#+LaTeX_HEADER: \usepackage{enumitem}
+#+LaTeX_HEADER: \setlist{leftmargin=0.25in,nosep}
+#+LATEX_HEADER: \usepackage{xeCJK,fontspec,xunicode,xltxtra}
+#+LATEX_HEADER: \setCJKmainfont{Microsoft YaHei}
+#+LATEX_HEADER: \setCJKmonofont{Microsoft YaHei}
+#+LATEX_HEADER: \setCJKfamilyfont{Microsoft YaHei}{Microsoft YaHei}
+#+LATEX_HEADER: \setmainfont{Microsoft YaHei}
+#+LATEX_HEADER: \setmonofont{Source Code Pro}
+#+LATEX_HEADER: \usepackage{setspace}
+#+LATEX_HEADER: \onehalfspacing
+
+
+#+BEGIN_CENTER
+| 手机：(+86) 1860xxxxxxxx | 邮箱：[[mailto:xxxxxxx@gmail.com][xxxxxxx@gmail.com]] |
+#+END_CENTER
+
+* 自我评价
+- 走在人工智能人机交互领域应用@@latex:{\color{red}@@ *创新* @@latex:}@@最前端
+- 一个有技术背景、有商业洞察力、能力@@latex:{\color{red}@@ *综合* @@latex:}@@的产品经理
+- 富有@@latex:{\color{red}@@ *好奇心和激情* @@latex:}@@
+
+* 工作经历
+** xx集团 ｜ AI研究院 ｜ 资深产品经理
+*** 2020.11 至今
+
+- 带领团队从 0 开始负责xxxx的工作。
+  + xxxx；
+  + xxxx；
+\smallskip
+- 赋能集团xxxx。
+  + xxxx *加粗* xxxx；
+  + xxxx；
+
+** xxx公司 ｜ AI产品经理
+*** 2020.9 - 2020.11
+- 负责xxx。
+
+
+* 教育经历
+** xxx大学
+*** 2006 - 2008
+xx信息技术，硕士，xxxxxx
+
+** xxx 大学
+*** 2002 - 2006
+xx信息技术，本科
+
+* 语言及技能
+- CET-6，熟练的英语读写听说能力
+- 有研发、服务、产品等技术背景
+- 有带领团队经验
+- 有销售经验和市场洞察力
+- 有人工智能、大模型、知识图谱、NLP、互联网等领域经验
+- 有良好的沟通表达能力
+- 富有好奇心和激情
