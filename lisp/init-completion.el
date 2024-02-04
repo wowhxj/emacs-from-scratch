@@ -184,30 +184,38 @@
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   )
 
-  (use-package cape
-    :ensure t
-    :init
-    ;; Add `completion-at-point-functions', used by `completion-at-point'.
-    (add-to-list 'completion-at-point-functions #'cape-file)
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    (add-to-list 'completion-at-point-functions #'cape-keyword)  ; programming language keyword
-    (add-to-list 'completion-at-point-functions #'cape-ispell)
-    (add-to-list 'completion-at-point-functions #'cape-dict)
-    (add-to-list 'completion-at-point-functions #'cape-symbol)   ; elisp symbol
-    (add-to-list 'completion-at-point-functions #'cape-line)
+(use-package cape
+  :ensure t
+  :hook (after-init . set-completion-backends)
+  :init
+  (defun set-completion-backends ()
+    (setq-local completion-at-point-functions
+                (list
+                 (cape-capf-buster
+                  (cape-capf-super
+                   #'codeium-completion-at-point
+                   #'cape-abbrev
+                   #'cape-dabbrev
+                   #'cape-keyword
+                   #'cape-elisp-block
+                   #'cape-elisp-symbol
+                   #'cape-file
+                   #'cape-line
+                   )
+                  'equal)
+                 )))
+  :config
+  (setq cape-dict-file (expand-file-name "etc/hunspell_dict.txt" user-emacs-directory))
 
-    :config
-    (setq cape-dict-file (expand-file-name "etc/hunspell_dict.txt" user-emacs-directory))
+  ;; for Eshell:
+  ;; ===========
+  ;; Silence the pcomplete capf, no errors or messages!
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
 
-    ;; for Eshell:
-    ;; ===========
-    ;; Silence the pcomplete capf, no errors or messages!
-    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-
-    ;; Ensure that pcomplete does not write to the buffer
-    ;; and behaves as a pure `completion-at-point-function'.
-    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
-    )
+  ;; Ensure that pcomplete does not write to the buffer
+  ;; and behaves as a pure `completion-at-point-function'.
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+  )
 
 ;; yasnippet settings
 (use-package yasnippet
