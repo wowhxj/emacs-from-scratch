@@ -75,3 +75,31 @@
 (provide 'init)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(all-the-icons-completion all-the-icons-dired cal-china-x calibredb cape
+                              capf-autosuggest consult-notes corfu crux denote
+                              diff-hl diminish diredfl dirvish doom-modeline
+                              ef-themes elfeed-goodies embark-consult
+                              eshell-git-prompt eshell-syntax-highlighting
+                              eshell-up fanyi fontaine gnuplot helpful htmlize
+                              keycast magit-delta marginalia minions mpvi
+                              multiple-cursors no-littering nov ol-notmuch
+                              orderless org-ai org-appear org-auto-tangle
+                              org-contrib org-modern org-super-links ox-gfm
+                              ox-hugo ox-odt ox-pandoc ox-reveal pass pinyinlib
+                              plantuml-mode popper py-autopep8
+                              quelpa-use-package rainbow-delimiters sdcv shackle
+                              super-save toc-org undo-tree
+                              use-package-ensure-system-package vertico
+                              which-key yasnippet)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

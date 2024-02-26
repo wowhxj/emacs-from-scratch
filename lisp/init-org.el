@@ -439,12 +439,12 @@ Marked 2 is a mac app that renders markdown."
       (interactive "fNote: ")
       (consult-grep (file-name-directory cand)))
 
-    (embark-define-keymap consult-notes-map
-                          "Keymap for Embark notes actions."
-                          :parent embark-file-map
-                          ("d" consult-notes-dired)
-                          ("g" consult-notes-grep)
-                          ("m" consult-notes-marked))
+    (defvar-keymap consult-notes-map
+      :doc "Keymap for Embark notes actions."
+      :parent embark-file-map
+      "d" #'consult-notes-open-dired
+      "g" #'consult-notes-grep
+      "m" #'consult-notes-marked)
 
     (add-to-list 'embark-keymap-alist `(,consult-notes-category . consult-notes-map))
 
@@ -965,6 +965,21 @@ See `org-capture-templates' for more information."
                    ;; symlink pointing to the actual location of capture.org!
                    (file+olp "capture.org" "Notes")
                    (function org-hugo-new-subtree-post-capture-template))))
+  )
+
+(add-to-list 'package-archives
+             '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
+
+(use-package ox-odt
+  :ensure t
+  :after (org ox ox-html)
+  :init
+  (add-to-list
+   'org-export-filter-parse-tree-functions
+   (defun org-html--translate-list-tables (tree backend info)
+     (if (member backend '(html latex))
+         (org-odt--translate-list-tables tree backend info)
+       tree)))
   )
 
 (use-package emacs
