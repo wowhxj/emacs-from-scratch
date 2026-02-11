@@ -10,8 +10,9 @@
 (use-package notmuch
   :ensure t
   :commands notmuch
-  :hook ((window-setup . notmuch)
-         (notmuch-hello-refresh . notmuch-unread-count))
+  ;; 按需是否需要开启 notmuch
+  ;; :hook ((window-setup . notmuch)
+  ;;        (notmuch-hello-refresh . notmuch-unread-count))
   :bind (("\e\em" . notmuch)
          ("C-x m" . notmuch-mua-new-mail) ; override `compose mail'
          :map notmuch-hello-mode-map

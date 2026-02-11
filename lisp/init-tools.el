@@ -38,7 +38,7 @@
   )
 
 (use-package sdcv
-  :quelpa (sdcv :fetcher github :repo "manateelazycat/sdcv")
+  :vc (:url "https://github.com/manateelazycat/sdcv")
   :commands (sdcv-search-pointer+)
   :bind ("C-," . sdcv-search-pointer+)
   :config

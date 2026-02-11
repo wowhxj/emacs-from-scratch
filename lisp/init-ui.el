@@ -8,9 +8,9 @@
   :bind ("C-c t" . ef-themes-toggle)
   :init
   ;; set two specific themes and switch between them
-  (setq ef-themes-to-toggle '(ef-summer ef-winter))
+  (setq modus-themes-to-toggle '(ef-summer ef-winter))
   ;; set org headings and function syntax
-  (setq ef-themes-headings
+  (setq modus-themes-headings
         '((0 . (bold 1))
           (1 . (bold 1))
           (2 . (rainbow bold 1))

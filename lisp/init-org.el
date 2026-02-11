@@ -454,7 +454,7 @@ Marked 2 is a mac app that renders markdown."
   )
 
 (use-package org-super-links
-  :quelpa (org-super-links :fetcher github :repo "toshism/org-super-links")
+  :vc (:url "https://github.com/toshism/org-super-links")
   :bind (("C-c s s"   . org-super-links-link)
          ("C-c s l"   . org-super-links-store-link)
          ("C-c s C-l" . org-super-links-insert-link)
@@ -881,10 +881,12 @@ Marked 2 is a mac app that renders markdown."
 
 (use-package ox-pandoc
   :ensure t
+  :after ox
   :custom
   ;; special extensions for markdown_github output
   (org-pandoc-format-extensions '(markdown_github+pipe_tables+raw_html))
-  (org-pandoc-command "/usr/local/bin/pandoc")
+  ;; 如果找不到，需要手动指定pandoc路径
+  ;; (org-pandoc-command "/usr/local/bin/pandoc")
   )
 
 (use-package ox-publish

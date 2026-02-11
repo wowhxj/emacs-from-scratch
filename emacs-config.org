@@ -50,6 +50,7 @@
   - [[#自动重载设置][自动重载设置]]
   - [[#avy光标移动][avy光标移动]]
   - [[#multiple-cursors多光标编辑][multiple-cursors多光标编辑]]
+  - [[#auto-space-mode中英文自动空格][auto-space-mode中英文自动空格]]
   - [[#init-editel-文件尾][init-edit.el 文件尾]]
 - [[#init-orgel][init-org.el]]
   - [[#init-orgel-文件头][init-org.el 文件头]]
@@ -236,8 +237,6 @@
   (require 'use-package))
 
 ;; 安装 `use-package' 的集成模块
-(use-package use-package-ensure-system-package
-  :ensure t)
 (use-package diminish
   :ensure t)
 (use-package bind-key
@@ -320,9 +319,9 @@
   :bind ("C-c t" . ef-themes-toggle)
   :init
   ;; set two specific themes and switch between them
-  (setq ef-themes-to-toggle '(ef-summer ef-winter))
+  (setq modus-themes-to-toggle '(ef-summer ef-winter))
   ;; set org headings and function syntax
-  (setq ef-themes-headings
+  (setq modus-themes-headings
         '((0 . (bold 1))
           (1 . (bold 1))
           (2 . (rainbow bold 1))
@@ -1255,6 +1254,17 @@ Emacs默认选择文本后直接输入，是不会直接删除所选择的文本
   )
 #+END_SRC
 
+** auto-space-mode中英文自动空格
+
+[[https://github.com/wowhxj/auto-space-mode][auto-space-mode]] 将自动在中英文之间添加空格。
+
+#+begin_src emacs-lisp
+(use-package auto-space-mode
+  :ensure t
+  :hook (after-init . auto-space-mode)
+  )
+#+end_src
+
 ** init-edit.el 文件尾
 
 #+BEGIN_SRC emacs-lisp
@@ -1776,7 +1786,7 @@ Marked 2 is a mac app that renders markdown."
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-links
-  :quelpa (org-super-links :fetcher github :repo "toshism/org-super-links")
+  :vc (:url "https://github.com/toshism/org-super-links")
   :bind (("C-c s s"   . org-super-links-link)
          ("C-c s l"   . org-super-links-store-link)
          ("C-c s C-l" . org-super-links-insert-link)
@@ -2281,10 +2291,12 @@ cd reveal.js && npm install
 #+begin_src emacs-lisp
 (use-package ox-pandoc
   :ensure t
+  :after ox
   :custom
   ;; special extensions for markdown_github output
   (org-pandoc-format-extensions '(markdown_github+pipe_tables+raw_html))
-  (org-pandoc-command "/usr/local/bin/pandoc")
+  ;; 如果找不到，需要手动指定pandoc路径
+  ;; (org-pandoc-command "/usr/local/bin/pandoc")
   )
 #+end_src
 
@@ -3005,11 +3017,10 @@ For locate on MacOS:
                               ('darwin "mdfind -name")))
   :config
   (consult-customize
-   consult-theme
-   :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
+   consult-ripgrep consult-git-grep consult-grep consult-man
    consult-bookmark consult-recent-file consult-xref
-   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+   consult-source-bookmark consult-source-file-register
+   consult-source-recent-file consult-source-project-recent-file
    :preview-key '(:debounce 0.4 any))
 
   ;; Optionally configure the narrowing key.
@@ -3442,13 +3453,6 @@ Version 2019-11-04"
   (setq dirvish-hide-details t)
   ;; open mp4 file via external program which is mpv here.
   (add-to-list 'mailcap-mime-extensions '(".mp4" . "video/mp4"))
-  (add-list-to-list 'dirvish-open-with-programs '(
-                                                  (("html") . ("open" "%f"))
-                                                  (("xlsx") . ("open" "%f"))
-                                                  (("pptx") . ("open" "%f"))
-                                                  (("docx") . ("open" "%f"))
-                                                  (("md")   . ("open" "%f"))
-                                                  ))
   :custom
   (dirvish-menu-bookmarks '(("h" "~/"             "Home")
                             ("d" "~/Downloads/"   "Downloads")
@@ -3547,7 +3551,7 @@ Version 2019-11-04"
   )
 
 (use-package sdcv
-  :quelpa (sdcv :fetcher github :repo "manateelazycat/sdcv")
+  :vc (:url "https://github.com/manateelazycat/sdcv")
   :commands (sdcv-search-pointer+)
   :bind ("C-," . sdcv-search-pointer+)
   :config
@@ -3953,8 +3957,9 @@ notmuch邮件系统配置。
 (use-package notmuch
   :ensure t
   :commands notmuch
-  :hook ((window-setup . notmuch)
-         (notmuch-hello-refresh . notmuch-unread-count))
+  ;; 按需是否需要开启 notmuch
+  ;; :hook ((window-setup . notmuch)
+  ;;        (notmuch-hello-refresh . notmuch-unread-count))
   :bind (("\e\em" . notmuch)
          ("C-x m" . notmuch-mua-new-mail) ; override `compose mail'
          :map notmuch-hello-mode-map

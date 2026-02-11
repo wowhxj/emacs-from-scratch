@@ -172,6 +172,11 @@
   (setq mc/always-run-for-all t)
   )
 
+(use-package auto-space-mode
+  :ensure t
+  :hook (after-init . auto-space-mode)
+  )
+
 ;; (message "init-base configuration: %.2fs"
 ;;          (float-time (time-subtract (current-time) my/init-base-start-time)))
 
